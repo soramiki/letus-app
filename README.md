@@ -44,8 +44,8 @@
 Node.js が必要です。
 
 ```bash
-git clone https://github.com/soramiki/letus-app.git
-cd letus-app
+git clone https://github.com/soramiki/task-manager.git
+cd task-manager
 npm install
 npm run dev
 ```

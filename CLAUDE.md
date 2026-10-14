@@ -164,9 +164,9 @@ END:VEVENT
 
 ## 現在の状況
 
-- 1. 環境構築：ほぼ完了（2026-10-14）
-  - GitHub：https://github.com/soramiki/letus-app （Public）。Gitの作者は soramiki / noreply アドレスに変更済み（会社のメールは履歴に残っていない）
+- 1. 環境構築：完了（2026-10-14）
+  - GitHub：https://github.com/soramiki/task-manager （Public。2026-10-14 に letus-app から名前を変更）。Gitの作者は soramiki / noreply アドレスに変更済み（会社のメールは履歴に残っていない）
   - Vercel：Team soramiki（Hobby）、Project Name `task-manager`、公開URL https://task-manager-kappa-three-54.vercel.app/
   - 名前に「LETUS」「理科大」は使わない（公式と誤解されないように）
-  - 残り：READMEに「非公式・大学とは無関係」の一文を入れてPushし、Vercelの自動更新を確認／GitHubのリポジトリ名を task-manager に変えるか決める
+  - READMEと画面下に「非公式・大学とは無関係」を表示。Pushで Vercel が自動更新されることを確認済み（約20秒）
 - 2. 追加・編集・削除・完了チェック・LocalStorage保存：完了（ユーザーの動作確認待ち）
