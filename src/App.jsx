@@ -55,6 +55,10 @@ function App() {
         <TaskList tasks={sortedTasks} onToggleDone={toggleDone} onEdit={openEditForm} />
       </main>
 
+      <footer className="app-footer">
+        個人で作った非公式のツールです。東京理科大学およびLETUSとは関係ありません。
+      </footer>
+
       {isFormOpen && (
         <TaskForm
           task={editingTask}

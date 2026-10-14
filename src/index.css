@@ -74,6 +74,13 @@ input {
   font-size: 1.3rem;
 }
 
+.app-footer {
+  margin-top: 40px;
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--text-sub);
+}
+
 /* ===== ボタン ===== */
 .button {
   min-height: 40px;

@@ -1,16 +1,61 @@
-# React + Vite
+# 課題管理（仮）
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+大学の課題を、LETUSで出たものも口頭や紙で出たものもまとめて管理し、締切に遅れないようにするWebアプリです。
 
-Currently, two official plugins are available:
+> **このアプリは個人で作った非公式のツールです。東京理科大学およびLETUSとは関係ありません。**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 公開URL：https://task-manager-kappa-three-54.vercel.app/
+- 開発中のため、内容は今後変わります。
 
-## React Compiler
+## 概要
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 想定ユーザー：LETUSを使う大学生（スマホでの利用がメイン）
+- 課題を「科目・課題名・締切」だけですばやく登録し、締切が近い順に確認できます。
+- データはブラウザの中（LocalStorage）に保存します。ログインは不要です。
 
-## Expanding the Oxlint configuration
+## 制作目的
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- LETUSは開くたびにログインが必要で、通知もないため、課題に気づきにくい
+- 口頭で言われた課題はLETUSに載らず、見落としやすい
+- いつ始めるかを決めていないので、提出がギリギリになる
+
+これらを、1か所で課題を管理できるようにすることで解決します。
+
+## 主な機能
+
+- 課題の追加・編集・削除
+- 完了チェック
+- 締切が近い順の表示、期限切れ・今日締切の色分け
+- 開始日時の入力（任意）
+
+今後追加する予定：検索・絞り込み・並び替え、今日の要約とタイムライン、LETUSから書き出したカレンダー（.ics）の取り込み
+
+## 使用技術
+
+- React 19
+- Vite
+- JavaScript
+- CSS
+- LocalStorage
+- GitHub / Vercel
+
+## ローカル環境での起動手順
+
+Node.js が必要です。
+
+```bash
+git clone https://github.com/soramiki/letus-app.git
+cd letus-app
+npm install
+npm run dev
+```
+
+ブラウザで http://localhost:5173 を開きます。
+
+## 開発上の工夫
+
+（作成中）
+
+## 今後の改善点
+
+（作成中）
