@@ -46,7 +46,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
   color: inherit;
 }
@@ -113,11 +114,98 @@ input {
   cursor: pointer;
 }
 
+/* ===== 検索・絞り込み・並び替え ===== */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.toolbar__search,
+.toolbar__select {
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  /* スマホで入力時に画面が勝手に拡大されないよう、16px以上にする */
+  font-size: 16px;
+}
+
+.toolbar__search {
+  width: 100%;
+}
+
+.toolbar__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toolbar__select {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+/* 状態の切り替えボタン（3つをくっつけて1つのボタンのように見せる） */
+.segmented {
+  display: flex;
+  flex: 1 1 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.segmented__button {
+  flex: 1;
+  min-height: 40px;
+  padding: 6px 8px;
+  border: none;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.segmented__button:first-child {
+  border-left: none;
+}
+
+.segmented__button[aria-pressed='true'] {
+  background: var(--primary);
+  color: var(--primary-text);
+  font-weight: 600;
+}
+
+/* 横幅に余裕があるときは、状態の切り替えと選択欄を1行に並べる */
+@media (min-width: 601px) {
+  .segmented {
+    flex: 0 0 auto;
+  }
+
+  .segmented__button {
+    flex: 0 0 auto;
+    padding: 6px 16px;
+  }
+}
+
+.result-count {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
 /* ===== 課題の一覧 ===== */
 .empty {
   margin-top: 48px;
   text-align: center;
   color: var(--text-sub);
+}
+
+.empty p {
+  margin: 0 0 12px;
 }
 
 .task-list {

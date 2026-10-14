@@ -169,4 +169,5 @@ END:VEVENT
   - Vercel：Team soramiki（Hobby）、Project Name `task-manager`、公開URL https://task-manager-kappa-three-54.vercel.app/
   - 名前に「LETUS」「理科大」は使わない（公式と誤解されないように）
   - READMEと画面下に「非公式・大学とは無関係」を表示。Pushで Vercel が自動更新されることを確認済み（約20秒）
-- 2. 追加・編集・削除・完了チェック・LocalStorage保存：完了（ユーザーの動作確認待ち）
+- 2. 追加・編集・削除・完了チェック・LocalStorage保存：完了
+- 3. 一覧（検索・絞り込み・並び替え）：完了（2026-10-14）。ここまでで社内課題の要件を満たした。次は「4. ホーム」
