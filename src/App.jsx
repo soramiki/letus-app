@@ -3,6 +3,7 @@ import { HomeView } from './components/HomeView.jsx'
 import { ListView } from './components/ListView.jsx'
 import { TabBar } from './components/TabBar.jsx'
 import { TaskForm } from './components/TaskForm.jsx'
+import { TimelineView } from './components/TimelineView.jsx'
 import { useNow } from './hooks/useNow.js'
 import { useTasks } from './hooks/useTasks.js'
 import { DEFAULT_CONDITIONS } from './utils/filterTasks.js'
@@ -20,7 +21,7 @@ function App() {
   } = useTasks()
   const now = useNow()
 
-  // 今見ている画面（'home' または 'list'）。開いたときはホームから
+  // 今見ている画面（'home'／'list'／'timeline'）。開いたときはホームから
   const [view, setView] = useState('home')
 
   // モーダルが開いているか、と、編集中の課題（追加のときは null）
@@ -78,7 +79,8 @@ function App() {
   }
 
   return (
-    <div className="app">
+    // タイムラインのページだけ、PCで横幅いっぱいまで広げる
+    <div className={`app ${view === 'timeline' ? 'app--wide' : ''}`}>
       <header className="app-header">
         <h1>課題管理</h1>
         <button type="button" className="button button--primary" onClick={openAddForm}>
@@ -87,19 +89,19 @@ function App() {
       </header>
 
       <main className="app-main">
-        {view === 'home' ? (
+        {view === 'home' && (
           <HomeView
             tasks={tasks}
-            subjects={subjects}
-            subjectColors={subjectColors}
             now={now}
             onToggleDone={toggleDone}
             onEdit={openEditForm}
             onAdd={openAddForm}
             onAddSamples={addSampleTasks}
             onRemoveSamples={removeSampleTasks}
+            onShowTimeline={() => changeView('timeline')}
           />
-        ) : (
+        )}
+        {view === 'list' && (
           <ListView
             tasks={tasks}
             subjects={subjects}
@@ -108,6 +110,15 @@ function App() {
             onChangeCondition={changeCondition}
             onResetConditions={resetConditions}
             onToggleDone={toggleDone}
+            onEdit={openEditForm}
+          />
+        )}
+        {view === 'timeline' && (
+          <TimelineView
+            tasks={tasks}
+            subjects={subjects}
+            subjectColors={subjectColors}
+            now={now}
             onEdit={openEditForm}
           />
         )}

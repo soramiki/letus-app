@@ -66,6 +66,22 @@ select {
   padding: 0 16px calc(88px + env(safe-area-inset-bottom));
 }
 
+/* タイムラインのページは、PCで横に広く使う */
+.app--wide {
+  max-width: 1200px;
+}
+
+.page-heading {
+  margin: 4px 0 4px;
+  font-size: 1.05rem;
+}
+
+.page-note {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
 .app-header {
   position: sticky;
   top: 0;
@@ -379,6 +395,14 @@ select {
 .home-section__heading {
   margin: 4px 0 10px;
   font-size: 1.05rem;
+}
+
+/* ホームの下の「タイムラインで見る」 */
+.home-link {
+  display: block;
+  margin: 0 auto;
+  padding: 8px;
+  font-size: 0.9rem;
 }
 
 /* 今日の要約（3つの数字） */

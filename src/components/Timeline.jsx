@@ -3,7 +3,7 @@ import { sortTasks } from '../utils/sortTasks.js'
 
 const DAY_WIDTH = 44 // 1日分の横幅（px）
 const DAYS_BEFORE_TODAY = 2 // 今日より前を何日分見せるか
-const MIN_DAYS = 14 // 最低でも2週間分は見せる
+const MIN_DAYS = 21 // 最低でも3週間分は見せる（PCの広い画面がうまるくらい）
 const MAX_DAYS = 60 // 長くなりすぎないように、最大60日分まで
 
 function clamp(value, min, max) {

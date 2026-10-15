@@ -2,19 +2,17 @@ import { formatDate } from '../utils/date.js'
 import { isSampleTask } from '../utils/sampleTasks.js'
 import { SUMMARY_GROUPS, summarizeTasks } from '../utils/summary.js'
 import { TaskList } from './TaskList.jsx'
-import { Timeline } from './Timeline.jsx'
 
-// 「ホーム」の画面：今日の要約 ＋ 科目ごとのタイムライン
+// 「ホーム」の画面：今日やることが、開いて1秒で分かる（今日の要約＋その課題）
 export function HomeView({
   tasks,
-  subjects,
-  subjectColors,
   now,
   onToggleDone,
   onEdit,
   onAdd,
   onAddSamples,
   onRemoveSamples,
+  onShowTimeline,
 }) {
   if (tasks.length === 0) {
     return (
@@ -94,18 +92,9 @@ export function HomeView({
         )}
       </section>
 
-      <section className="home-section" aria-labelledby="timeline-heading">
-        <h2 id="timeline-heading" className="home-section__heading">
-          タイムライン
-        </h2>
-        <Timeline
-          tasks={tasks}
-          subjects={subjects}
-          subjectColors={subjectColors}
-          now={now}
-          onEdit={onEdit}
-        />
-      </section>
+      <button type="button" className="link-button home-link" onClick={onShowTimeline}>
+        この先の予定をタイムラインで見る →
+      </button>
     </>
   )
 }
