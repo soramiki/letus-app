@@ -11,6 +11,9 @@
   --overdue-bg: #fdecec;
   --today-bg: #fff6dc;
   --today-text: #8a5a00;
+  --start-text: #1f5fbf;
+  --weekend-bg: rgb(0 0 0 / 0.035);
+  --now-line: #d64f5f;
   --radius: 10px;
 
   font-family: system-ui, -apple-system, 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
@@ -33,6 +36,9 @@
     --overdue-bg: #3a2225;
     --today-bg: #3a3220;
     --today-text: #f0c060;
+    --start-text: #8ab4ff;
+    --weekend-bg: rgb(255 255 255 / 0.04);
+    --now-line: #ff7b88;
   }
 }
 
@@ -56,13 +62,14 @@ select {
 .app {
   max-width: 720px;
   margin: 0 auto;
-  padding: 0 16px 48px;
+  /* 下のタブに最後の行が隠れないよう、下に余白を取る */
+  padding: 0 16px calc(88px + env(safe-area-inset-bottom));
 }
 
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -293,6 +300,331 @@ select {
 
 .task-item--today .task-item__badge {
   background: var(--today-text);
+}
+
+.task-item__start {
+  font-size: 0.8rem;
+  color: var(--start-text);
+}
+
+.task-item__start--now {
+  font-weight: 600;
+}
+
+/* ===== 下のタブ ===== */
+.tab-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab-bar__button {
+  flex: 0 1 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0 10px;
+  border: none;
+  background: none;
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  cursor: pointer;
+}
+
+.tab-bar__icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.tab-bar__button[aria-current='page'] {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ===== ホーム ===== */
+.home-section {
+  margin-bottom: 28px;
+}
+
+.home-section__heading {
+  margin: 4px 0 10px;
+  font-size: 1.05rem;
+}
+
+/* 今日の要約（3つの数字） */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.summary__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.summary__card:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.summary__count {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.summary__label {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.summary__card--overdue:not(:disabled) {
+  background: var(--overdue-bg);
+}
+
+.summary__card--overdue:not(:disabled) .summary__count {
+  color: var(--danger);
+}
+
+.summary__card--dueToday:not(:disabled) {
+  background: var(--today-bg);
+}
+
+.summary__card--dueToday:not(:disabled) .summary__count {
+  color: var(--today-text);
+}
+
+.summary__card--startToday:not(:disabled) .summary__count {
+  color: var(--start-text);
+}
+
+.summary-group {
+  margin-bottom: 16px;
+  /* 上の固定ヘッダーに見出しが隠れないよう、スクロールで止まる位置をずらす */
+  scroll-margin-top: 72px;
+}
+
+.summary-group__heading {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+}
+
+.summary-group__heading--overdue {
+  color: var(--danger);
+}
+
+.summary-group__heading--dueToday {
+  color: var(--today-text);
+}
+
+.summary-group__heading--startToday {
+  color: var(--start-text);
+}
+
+.summary-clear {
+  margin: 0;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: center;
+  color: var(--text-sub);
+}
+
+/* ===== タイムライン ===== */
+.timeline {
+  /* 中身が横に長いので、この枠の中だけ横スクロールさせる */
+  position: relative;
+  z-index: 0;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  --tl-label-width: 112px;
+}
+
+@media (min-width: 601px) {
+  .timeline {
+    --tl-label-width: 180px;
+  }
+}
+
+.timeline__inner {
+  position: relative;
+  width: calc(var(--tl-label-width) + var(--tl-track-width));
+}
+
+.timeline-empty {
+  margin: 0;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: center;
+  color: var(--text-sub);
+}
+
+/* 背景の縦の区切りと今日の線（上から一番下まで） */
+.tl-grid {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--tl-label-width);
+  width: var(--tl-track-width);
+  pointer-events: none;
+}
+
+.tl-grid__day {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--border);
+}
+
+.tl-grid__day--weekend {
+  background: var(--weekend-bg);
+}
+
+.tl-grid__now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--now-line);
+}
+
+.tl-row {
+  position: relative;
+  display: flex;
+  min-height: 34px;
+}
+
+.tl-row--header {
+  min-height: 44px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* 左の名前の列（横スクロールしても左に残る） */
+.tl-label {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  flex: 0 0 var(--tl-label-width);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 4px 8px;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.8rem;
+  text-align: left;
+  overflow: hidden;
+}
+
+.tl-row--header .tl-label {
+  color: var(--text-sub);
+}
+
+.tl-label--subject {
+  font-weight: 700;
+  padding-top: 10px;
+}
+
+.tl-label--task {
+  padding-left: 24px;
+  cursor: pointer;
+  /* 長い課題名は「…」で省略する */
+  display: block;
+  line-height: 26px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tl-row--overdue .tl-label--task {
+  color: var(--danger);
+}
+
+.tl-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.tl-track {
+  position: relative;
+  flex: 0 0 var(--tl-track-width);
+}
+
+.tl-date {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--text-sub);
+}
+
+.tl-date__day {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tl-date--today .tl-date__day,
+.tl-date--today .tl-date__weekday {
+  color: var(--now-line);
+}
+
+/* 開始〜締切の帯 */
+.tl-bar {
+  position: absolute;
+  top: 8px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+/* 開始日がない課題の、締切の◆印 */
+.tl-marker {
+  position: absolute;
+  top: 10px;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  padding: 0;
+  border: none;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+/* 期限切れの課題は薄くする */
+.tl-row--overdue .tl-bar,
+.tl-row--overdue .tl-marker {
+  opacity: 0.45;
 }
 
 /* ===== モーダル ===== */

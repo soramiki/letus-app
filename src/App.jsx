@@ -1,26 +1,32 @@
 import { useCallback, useState } from 'react'
+import { HomeView } from './components/HomeView.jsx'
+import { ListView } from './components/ListView.jsx'
+import { TabBar } from './components/TabBar.jsx'
 import { TaskForm } from './components/TaskForm.jsx'
-import { TaskList } from './components/TaskList.jsx'
-import { TaskToolbar } from './components/TaskToolbar.jsx'
+import { useNow } from './hooks/useNow.js'
 import { useTasks } from './hooks/useTasks.js'
-import { DEFAULT_CONDITIONS, filterTasks } from './utils/filterTasks.js'
-import { sortTasks } from './utils/sortTasks.js'
+import { DEFAULT_CONDITIONS } from './utils/filterTasks.js'
+import { getSubjectColors } from './utils/subjectColors.js'
 
 function App() {
   const { tasks, addTask, updateTask, deleteTask, toggleDone } = useTasks()
+  const now = useNow()
+
+  // 今見ている画面（'home' または 'list'）。開いたときはホームから
+  const [view, setView] = useState('home')
 
   // モーダルが開いているか、と、編集中の課題（追加のときは null）
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
 
-  // 検索・絞り込み・並び替えの条件（保存はしない。開き直すと初期値に戻る）
+  // 一覧の検索・絞り込み・並び替えの条件（ホームとの行き来では残す。開き直すと初期値に戻る）
   const [conditions, setConditions] = useState(DEFAULT_CONDITIONS)
 
-  // 科目の候補・絞り込み結果・並び順は保存せず、表示のたびに tasks から計算する
+  // 科目の一覧と色は保存せず、表示のたびに tasks から計算する
   const subjects = [...new Set(tasks.map((task) => task.subject))].sort((a, b) =>
     a.localeCompare(b, 'ja'),
   )
-  const visibleTasks = sortTasks(filterTasks(tasks, conditions), conditions.sort)
+  const subjectColors = getSubjectColors(subjects)
 
   // 条件を1つだけ変える（ほかの条件はそのまま）
   function changeCondition(name, value) {
@@ -29,6 +35,11 @@ function App() {
 
   function resetConditions() {
     setConditions(DEFAULT_CONDITIONS)
+  }
+
+  function changeView(nextView) {
+    setView(nextView)
+    window.scrollTo(0, 0)
   }
 
   function openAddForm() {
@@ -68,27 +79,35 @@ function App() {
       </header>
 
       <main className="app-main">
-        {tasks.length > 0 && (
-          <>
-            <TaskToolbar conditions={conditions} subjects={subjects} onChange={changeCondition} />
-            <p className="result-count">
-              {visibleTasks.length}件
-              {visibleTasks.length !== tasks.length && `（全${tasks.length}件中）`}
-            </p>
-          </>
+        {view === 'home' ? (
+          <HomeView
+            tasks={tasks}
+            subjects={subjects}
+            subjectColors={subjectColors}
+            now={now}
+            onToggleDone={toggleDone}
+            onEdit={openEditForm}
+            onAdd={openAddForm}
+          />
+        ) : (
+          <ListView
+            tasks={tasks}
+            subjects={subjects}
+            conditions={conditions}
+            now={now}
+            onChangeCondition={changeCondition}
+            onResetConditions={resetConditions}
+            onToggleDone={toggleDone}
+            onEdit={openEditForm}
+          />
         )}
-        <TaskList
-          tasks={visibleTasks}
-          hasAnyTask={tasks.length > 0}
-          onToggleDone={toggleDone}
-          onEdit={openEditForm}
-          onResetConditions={resetConditions}
-        />
       </main>
 
       <footer className="app-footer">
         個人で作った非公式のツールです。東京理科大学およびLETUSとは関係ありません。
       </footer>
+
+      <TabBar view={view} onChange={changeView} />
 
       {isFormOpen && (
         <TaskForm

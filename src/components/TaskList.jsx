@@ -2,7 +2,7 @@ import { TaskItem } from './TaskItem.jsx'
 
 // 課題の一覧。表示する課題がないときは案内を出す
 // hasAnyTask：課題が1件でも登録されているか（「まだない」と「条件に合わない」を分けるため）
-export function TaskList({ tasks, hasAnyTask, onToggleDone, onEdit, onResetConditions }) {
+export function TaskList({ tasks, hasAnyTask, now, onToggleDone, onEdit, onResetConditions }) {
   if (!hasAnyTask) {
     return (
       <p className="empty">
@@ -27,7 +27,13 @@ export function TaskList({ tasks, hasAnyTask, onToggleDone, onEdit, onResetCondi
   return (
     <ul className="task-list">
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} onToggleDone={onToggleDone} onEdit={onEdit} />
+        <TaskItem
+          key={task.id}
+          task={task}
+          now={now}
+          onToggleDone={onToggleDone}
+          onEdit={onEdit}
+        />
       ))}
     </ul>
   )
