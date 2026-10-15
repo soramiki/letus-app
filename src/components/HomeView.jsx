@@ -1,10 +1,21 @@
 import { formatDate } from '../utils/date.js'
+import { isSampleTask } from '../utils/sampleTasks.js'
 import { SUMMARY_GROUPS, summarizeTasks } from '../utils/summary.js'
 import { TaskList } from './TaskList.jsx'
 import { Timeline } from './Timeline.jsx'
 
 // 「ホーム」の画面：今日の要約 ＋ 科目ごとのタイムライン
-export function HomeView({ tasks, subjects, subjectColors, now, onToggleDone, onEdit, onAdd }) {
+export function HomeView({
+  tasks,
+  subjects,
+  subjectColors,
+  now,
+  onToggleDone,
+  onEdit,
+  onAdd,
+  onAddSamples,
+  onRemoveSamples,
+}) {
   if (tasks.length === 0) {
     return (
       <div className="empty">
@@ -13,14 +24,20 @@ export function HomeView({ tasks, subjects, subjectColors, now, onToggleDone, on
           <br />
           まずは課題を1つ登録してみましょう。
         </p>
-        <button type="button" className="button button--primary" onClick={onAdd}>
-          ＋ 課題を追加
-        </button>
+        <div className="empty__actions">
+          <button type="button" className="button button--primary" onClick={onAdd}>
+            ＋ 課題を追加
+          </button>
+          <button type="button" className="button" onClick={onAddSamples}>
+            サンプルの課題で試す
+          </button>
+        </div>
       </div>
     )
   }
 
   const groups = summarizeTasks(tasks, now)
+  const hasSamples = tasks.some(isSampleTask)
   const hasTodo = SUMMARY_GROUPS.some(({ key }) => groups[key].length > 0)
 
   // 要約の数字をタップしたら、その課題のまとまりまでスクロールする
@@ -30,6 +47,15 @@ export function HomeView({ tasks, subjects, subjectColors, now, onToggleDone, on
 
   return (
     <>
+      {hasSamples && (
+        <div className="sample-banner">
+          <span>架空のサンプルの課題を表示しています。</span>
+          <button type="button" className="button" onClick={onRemoveSamples}>
+            サンプルを消す
+          </button>
+        </div>
+      )}
+
       <section className="home-section" aria-labelledby="today-heading">
         <h2 id="today-heading" className="home-section__heading">
           今日 {formatDate(now)}

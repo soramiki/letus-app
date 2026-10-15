@@ -9,7 +9,15 @@ import { DEFAULT_CONDITIONS } from './utils/filterTasks.js'
 import { getSubjectColors } from './utils/subjectColors.js'
 
 function App() {
-  const { tasks, addTask, updateTask, deleteTask, toggleDone } = useTasks()
+  const {
+    tasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    toggleDone,
+    addSampleTasks,
+    removeSampleTasks,
+  } = useTasks()
   const now = useNow()
 
   // 今見ている画面（'home' または 'list'）。開いたときはホームから
@@ -88,6 +96,8 @@ function App() {
             onToggleDone={toggleDone}
             onEdit={openEditForm}
             onAdd={openAddForm}
+            onAddSamples={addSampleTasks}
+            onRemoveSamples={removeSampleTasks}
           />
         ) : (
           <ListView
