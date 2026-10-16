@@ -774,6 +774,36 @@ select {
   background: var(--today-text);
 }
 
+.import-preview__tag--done {
+  background: var(--text-sub);
+}
+
+.import-preview__option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.import-preview__option input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+}
+
+.import-preview__option small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: var(--text-sub);
+}
+
 .import-preview__subject {
   color: var(--text-sub);
 }

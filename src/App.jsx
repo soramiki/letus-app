@@ -66,8 +66,8 @@ function App() {
   }
 
   // 取り込む。サンプルのときは「前回の取り込み」を記録しない（お知らせが消えないように）
-  function handleImport(events, { isSample }) {
-    importLetusEvents(events)
+  function handleImport(events, { isSample, markPastAsDone }) {
+    importLetusEvents(events, { markPastAsDone })
     if (!isSample) {
       const at = new Date().toISOString()
       saveLastImport(at)
@@ -158,7 +158,7 @@ function App() {
           />
         )}
         {view === 'import' && (
-          <ImportView tasks={tasks} lastImport={lastImport} onImport={handleImport} />
+          <ImportView tasks={tasks} lastImport={lastImport} now={now} onImport={handleImport} />
         )}
       </main>
 

@@ -47,8 +47,9 @@ export function useTasks() {
   }
 
   // .ics から読み込んだ予定を反映する（ルールは importEvents.js）
-  function importLetusEvents(events) {
-    setTasks((prev) => importEvents(prev, events, createId).tasks)
+  // options: { markPastAsDone } 締切を過ぎた新しい課題を完了にするか
+  function importLetusEvents(events, options) {
+    setTasks((prev) => importEvents(prev, events, createId, options).tasks)
   }
 
   // サンプルの課題をまとめて入れる／まとめて消す（自分で登録した課題はそのまま）

@@ -8,10 +8,12 @@ const LETUS_EXPORT_URL = 'https://letus.ed.tus.ac.jp/calendar/export.php'
 
 // 「取り込み」の画面：LETUS の課題を、手で入力せずに入れる
 // 1. ファイルを選ぶ → 2. 何が変わるかを確認 → 3. 取り込む
-export function ImportView({ tasks, lastImport, onImport }) {
+export function ImportView({ tasks, lastImport, now, onImport }) {
   const [preview, setPreview] = useState(null) // 確認中の内容
   const [error, setError] = useState('')
   const [message, setMessage] = useState('') // 取り込み後のお知らせ
+  // 締切を過ぎた新しい課題を「完了」にして取り込むか（最初はオン）
+  const [markPastAsDone, setMarkPastAsDone] = useState(true)
 
   // .ics の中身を読んで、取り込んだら何が変わるかを計算する（まだ反映はしない）
   function prepare(text, fileName, isSample) {
@@ -25,9 +27,17 @@ export function ImportView({ tasks, lastImport, onImport }) {
       return
     }
     setError('')
+    setPreview({ fileName, events, skipped, isSample })
+  }
+
+  // 確認画面に出す結果。チェックを切り替えたらすぐ数が変わるように、表示のたびに計算する
+  let previewResult = null
+  if (preview) {
     let n = 0
-    const result = importEvents(tasks, events, () => `preview-${n++}`)
-    setPreview({ fileName, events, skipped, result, isSample })
+    previewResult = importEvents(tasks, preview.events, () => `preview-${n++}`, {
+      markPastAsDone,
+      now,
+    })
   }
 
   async function handleFileChange(e) {
@@ -58,8 +68,9 @@ export function ImportView({ tasks, lastImport, onImport }) {
   }
 
   function confirmImport() {
-    const { result, events, isSample } = preview
-    onImport(events, { isSample })
+    const { events, isSample } = preview
+    const result = previewResult
+    onImport(events, { isSample, markPastAsDone })
     setMessage(
       `取り込みました（追加 ${result.added.length}件・更新 ${result.updated.length}件・変更なし ${result.unchangedCount}件）`,
     )
@@ -93,7 +104,14 @@ export function ImportView({ tasks, lastImport, onImport }) {
       {message && <p className="import-message">{message}</p>}
 
       {preview && (
-        <ImportPreview preview={preview} onConfirm={confirmImport} onCancel={() => setPreview(null)} />
+        <ImportPreview
+          preview={preview}
+          result={previewResult}
+          markPastAsDone={markPastAsDone}
+          onChangeMarkPastAsDone={setMarkPastAsDone}
+          onConfirm={confirmImport}
+          onCancel={() => setPreview(null)}
+        />
       )}
 
       <div className="import-help">
@@ -150,8 +168,17 @@ export function ImportView({ tasks, lastImport, onImport }) {
 }
 
 // 取り込む前の確認：何件追加・更新されるか
-function ImportPreview({ preview, onConfirm, onCancel }) {
-  const { fileName, skipped, result } = preview
+function ImportPreview({
+  preview,
+  result,
+  markPastAsDone,
+  onChangeMarkPastAsDone,
+  onConfirm,
+  onCancel,
+}) {
+  const { fileName, skipped } = preview
+  // 追加する課題のうち、締切を過ぎているもの（チェックのオン・オフに関係なく数える）
+  const { pastCount } = result
   const hasChanges = result.added.length > 0 || result.updated.length > 0
 
   return (
@@ -172,6 +199,20 @@ function ImportPreview({ preview, onConfirm, onCancel }) {
         <p className="import-preview__note">課題ではない予定 {skipped}件は取り込みません。</p>
       )}
 
+      {pastCount > 0 && (
+        <label className="import-preview__option">
+          <input
+            type="checkbox"
+            checked={markPastAsDone}
+            onChange={(e) => onChangeMarkPastAsDone(e.target.checked)}
+          />
+          <span>
+            締切を過ぎた課題（{pastCount}件）は「完了」にして取り込む
+            <small>LETUSには提出したかどうかの情報がないため、提出済みとみなします。出し忘れがあれば一覧の「完了」から戻せます。</small>
+          </span>
+        </label>
+      )}
+
       {hasChanges ? (
         <ul className="import-preview__list">
           {[...result.added.map((t) => ['追加', t]), ...result.updated.map((t) => ['更新', t])].map(
@@ -180,6 +221,9 @@ function ImportPreview({ preview, onConfirm, onCancel }) {
                 <span className={`import-preview__tag import-preview__tag--${label === '追加' ? 'add' : 'update'}`}>
                   {label}
                 </span>
+                {task.done && label === '追加' && (
+                  <span className="import-preview__tag import-preview__tag--done">完了</span>
+                )}
                 <span className="import-preview__subject">{task.subject}</span>
                 {task.title}
                 <span className="import-preview__due">
