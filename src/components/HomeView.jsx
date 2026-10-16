@@ -1,4 +1,5 @@
 import { formatDate } from '../utils/date.js'
+import { ImportReminder } from './ImportReminder.jsx'
 import { isSampleTask } from '../utils/sampleTasks.js'
 import { SUMMARY_GROUPS, summarizeTasks } from '../utils/summary.js'
 import { TaskList } from './TaskList.jsx'
@@ -13,10 +14,13 @@ export function HomeView({
   onAddSamples,
   onRemoveSamples,
   onShowTimeline,
+  reminder, // 取り込みのお知らせ（出さないときは null）
 }) {
   if (tasks.length === 0) {
     return (
-      <div className="empty">
+      <>
+        {reminder && <ImportReminder {...reminder} />}
+        <div className="empty">
         <p>
           まだ課題がありません。
           <br />
@@ -31,6 +35,7 @@ export function HomeView({
           </button>
         </div>
       </div>
+      </>
     )
   }
 
@@ -45,6 +50,8 @@ export function HomeView({
 
   return (
     <>
+      {reminder && <ImportReminder {...reminder} />}
+
       {hasSamples && (
         <div className="sample-banner">
           <span>架空のサンプルの課題を表示しています。</span>

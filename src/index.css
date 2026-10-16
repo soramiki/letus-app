@@ -673,6 +673,199 @@ select {
   opacity: 0.45;
 }
 
+/* ===== 取り込み ===== */
+.import-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* ファイルを選ぶ欄は隠して、label をボタンとして見せる */
+.import-file {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.import-file input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* キーボードで選んだときに、どこにいるか分かるようにする */
+.import-file:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.import-message {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.import-preview {
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.import-preview__file {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  overflow-wrap: anywhere;
+}
+
+.import-preview__counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.import-preview__counts strong {
+  font-size: 1.3rem;
+}
+
+.import-preview__note {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.import-preview__list {
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.import-preview__list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.import-preview__tag {
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--primary-text);
+  background: var(--primary);
+}
+
+.import-preview__tag--update {
+  background: var(--today-text);
+}
+
+.import-preview__subject {
+  color: var(--text-sub);
+}
+
+.import-preview__due {
+  width: 100%;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.import-help {
+  margin-top: 24px;
+}
+
+.import-help__heading {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+.import-help__item {
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 0.9rem;
+}
+
+.import-help__item summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.import-help__item ol,
+.import-help__item ul {
+  margin: 8px 0 0;
+  padding-left: 1.4em;
+}
+
+.import-help__item li {
+  margin-bottom: 6px;
+}
+
+.import-help__item a {
+  color: var(--primary);
+  overflow-wrap: anywhere;
+}
+
+.import-help__item small {
+  color: var(--text-sub);
+}
+
+.import-help__sample {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.import-help__sample .link-button {
+  display: inline;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* ホームの上の「取り込みましょう」のお知らせ */
+.import-reminder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.import-reminder__text {
+  margin: 0;
+  font-weight: 600;
+}
+
+.import-reminder__text small {
+  font-weight: normal;
+  color: var(--text-sub);
+}
+
+.import-reminder__actions {
+  display: flex;
+  gap: 8px;
+}
+
 /* ===== モーダル ===== */
 .modal-backdrop {
   position: fixed;

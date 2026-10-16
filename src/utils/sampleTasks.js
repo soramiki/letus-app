@@ -3,11 +3,14 @@ import { addDays } from './date.js'
 // 試しに使ってもらうための、架空の課題（授業名も架空）
 // 今日を基準に日付を決めるので、いつ入れても「期限切れ」「今日締切」「今日始める」がそろう
 
-// サンプルの課題は、番号の先頭をこの文字にして見分ける
+// サンプルの課題は、番号（またはサンプルの .ics の UID）の先頭をこの文字にして見分ける
 export const SAMPLE_ID_PREFIX = 'sample-'
 
 export function isSampleTask(task) {
-  return task.id.startsWith(SAMPLE_ID_PREFIX)
+  return (
+    task.id.startsWith(SAMPLE_ID_PREFIX) ||
+    (task.letusUids ?? []).some((uid) => uid.startsWith(SAMPLE_ID_PREFIX))
+  )
 }
 
 // 今日から days 日後の hh:mm を '2026-10-20T08:50' の形にする

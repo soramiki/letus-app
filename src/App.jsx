@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { HomeView } from './components/HomeView.jsx'
+import { ImportView } from './components/ImportView.jsx'
 import { ListView } from './components/ListView.jsx'
 import { TabBar } from './components/TabBar.jsx'
 import { TaskForm } from './components/TaskForm.jsx'
@@ -7,6 +8,14 @@ import { TimelineView } from './components/TimelineView.jsx'
 import { useNow } from './hooks/useNow.js'
 import { useTasks } from './hooks/useTasks.js'
 import { DEFAULT_CONDITIONS } from './utils/filterTasks.js'
+import {
+  loadDismissedWeek,
+  loadLastImport,
+  saveDismissedWeek,
+  saveLastImport,
+  shouldRemind,
+  startOfWeek,
+} from './utils/importReminder.js'
 import { getSubjectColors } from './utils/subjectColors.js'
 
 function App() {
@@ -16,12 +25,13 @@ function App() {
     updateTask,
     deleteTask,
     toggleDone,
+    importLetusEvents,
     addSampleTasks,
     removeSampleTasks,
   } = useTasks()
   const now = useNow()
 
-  // 今見ている画面（'home'／'list'／'timeline'）。開いたときはホームから
+  // 今見ている画面（'home'／'list'／'timeline'／'import'）。開いたときはホームから
   const [view, setView] = useState('home')
 
   // モーダルが開いているか、と、編集中の課題（追加のときは null）
@@ -30,6 +40,10 @@ function App() {
 
   // 一覧の検索・絞り込み・並び替えの条件（ホームとの行き来では残す。開き直すと初期値に戻る）
   const [conditions, setConditions] = useState(DEFAULT_CONDITIONS)
+
+  // 前回の取り込み日時と、お知らせを「今週は閉じる」にした週
+  const [lastImport, setLastImport] = useState(loadLastImport)
+  const [dismissedWeek, setDismissedWeek] = useState(loadDismissedWeek)
 
   // 科目の一覧と色は保存せず、表示のたびに tasks から計算する
   const subjects = [...new Set(tasks.map((task) => task.subject))].sort((a, b) =>
@@ -50,6 +64,26 @@ function App() {
     setView(nextView)
     window.scrollTo(0, 0)
   }
+
+  // 取り込む。サンプルのときは「前回の取り込み」を記録しない（お知らせが消えないように）
+  function handleImport(events, { isSample }) {
+    importLetusEvents(events)
+    if (!isSample) {
+      const at = new Date().toISOString()
+      saveLastImport(at)
+      setLastImport(at)
+    }
+  }
+
+  function dismissReminder() {
+    const week = startOfWeek(now).toISOString()
+    saveDismissedWeek(week)
+    setDismissedWeek(week)
+  }
+
+  const reminder = shouldRemind(lastImport, dismissedWeek, now)
+    ? { lastImport, onGoImport: () => changeView('import'), onDismiss: dismissReminder }
+    : null
 
   function openAddForm() {
     setEditingTask(null)
@@ -99,6 +133,7 @@ function App() {
             onAddSamples={addSampleTasks}
             onRemoveSamples={removeSampleTasks}
             onShowTimeline={() => changeView('timeline')}
+            reminder={reminder}
           />
         )}
         {view === 'list' && (
@@ -121,6 +156,9 @@ function App() {
             now={now}
             onEdit={openEditForm}
           />
+        )}
+        {view === 'import' && (
+          <ImportView tasks={tasks} lastImport={lastImport} onImport={handleImport} />
         )}
       </main>
 

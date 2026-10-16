@@ -3,6 +3,7 @@ const VIEWS = [
   { value: 'home', label: 'ホーム', icon: '⌂' },
   { value: 'list', label: '一覧', icon: '☰' },
   { value: 'timeline', label: 'タイムライン', icon: '▤' },
+  { value: 'import', label: '取り込み', icon: '⇩' },
 ]
 
 export function TabBar({ view, onChange }) {

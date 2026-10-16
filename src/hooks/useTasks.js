@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { createId } from '../utils/id.js'
+import { importEvents } from '../utils/importEvents.js'
 import { createSampleTasks, isSampleTask } from '../utils/sampleTasks.js'
 
 // LocalStorage（ブラウザの中の保存場所）に保存するときの名前
@@ -13,11 +15,6 @@ function loadTasks() {
     // 保存データが壊れていても、アプリが止まらないようにする
     return []
   }
-}
-
-// 課題に付ける番号。重ならないように、時刻と乱数を組み合わせる
-function createId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
 }
 
 // 課題の一覧と、それを変更する関数をまとめたカスタムフック
@@ -49,6 +46,11 @@ export function useTasks() {
     setTasks((prev) => prev.map((task) => (task.id === id ? { ...task, done: !task.done } : task)))
   }
 
+  // .ics から読み込んだ予定を反映する（ルールは importEvents.js）
+  function importLetusEvents(events) {
+    setTasks((prev) => importEvents(prev, events, createId).tasks)
+  }
+
   // サンプルの課題をまとめて入れる／まとめて消す（自分で登録した課題はそのまま）
   function addSampleTasks() {
     setTasks((prev) => [...prev.filter((task) => !isSampleTask(task)), ...createSampleTasks()])
@@ -64,6 +66,7 @@ export function useTasks() {
     updateTask,
     deleteTask,
     toggleDone,
+    importLetusEvents,
     addSampleTasks,
     removeSampleTasks,
   }
