@@ -94,10 +94,13 @@
 
 ### 取り込みの流れ
 
-- PC：LETUSの `https://letus.ed.tus.ac.jp/calendar/export.php` でエクスポート → アプリで読み込む
+- **メイン（2026-10-23〜）：カレンダーURL**。LETUSの書き出しページの「カレンダーURLを取得」で出るURL（`https://letus.ed.tus.ac.jp/calendar/export_execute.php?...authtoken=...`）を、最初の1回だけアプリに保存 → 次からは「LETUSから最新の課題を取り込む」ボタンだけ
+  - ブラウザから直接はLETUSを読めない（CORSで許可されていない）ので、Vercelのサーバーレス関数 `api/letus-calendar.js` が中継する
+  - URLはパスワードと同じ。端末の LocalStorage にだけ保存。中継役は保存・記録しない。LETUSのカレンダーの書き出しURL以外にはつながない。URLはPOSTの本文で送る（アドレスに入れない）
+  - 中継役は東京リージョン（vercel.json の regions: hnd1）
+- PC：LETUSの `https://letus.ed.tus.ac.jp/calendar/export.php` でエクスポート → アプリで読み込む（ファイルからの取り込みも残す）
   （LETUSのメニューにはカレンダーがないので、このURLに直接アクセスする）
-- iPhone：**Googleアプリ**で上のURLを開く（ブックマーク登録しておく）→ エクスポート → 共有 →「ファイルに保存」→ Safariで開いたアプリで読み込む
-  - SafariとChromeはカレンダー追加の画面になり、ファイルとして保存できなかった
+- iPhoneでファイルを保存する方法は使えなくなった（2026-10-23：Googleアプリでも「カレンダーに追加」の画面になり、ファイルに保存できなかった。SafariとChromeも同じ）→ カレンダーURLに切り替えた
 - エクスポート設定：「すべてのイベント」、期間は「最近および次の60日間」またはカスタム範囲
 - 週の初めに、アプリ内で「LETUSの課題を取り込みましょう（前回：〇/〇）」とお知らせを出す
 
@@ -145,7 +148,7 @@ END:VEVENT
 - GitHubで管理（Public）、Vercelで公開（無料プラン）
   - **GitHub・Vercelとも個人アカウント**（会社のアカウントは使わない）
   - 初回公開のあと、コードを変えてPushし、Vercelが自動で更新されることも確認する
-- PC・スマホ対応、バックエンドなし
+- PC・スマホ対応。データの保存はLocalStorage（バックエンドなし）。ただしLETUSの中継だけ、Vercelのサーバーレス関数を使う（要項では「バックエンドは必須ではない」なので問題なし）
 - 追加・編集・削除・検索・絞り込みのうち2種類以上
 - **ログインなしで、第三者（代表）が公開URLから主な機能を試せること**
   → 代表はLETUSを使わないので、架空のサンプルデータや sample.ics で試せるようにする

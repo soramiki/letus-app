@@ -2,18 +2,28 @@ import { useState } from 'react'
 import { formatDateTime } from '../utils/date.js'
 import { parseIcs } from '../utils/ics.js'
 import { importEvents } from '../utils/importEvents.js'
+import {
+  fetchLetusIcs,
+  isLetusCalendarUrl,
+  loadCalendarUrl,
+  removeCalendarUrl,
+  saveCalendarUrl,
+} from '../utils/letusCalendar.js'
 import { createSampleIcs } from '../utils/sampleIcs.js'
 
 const LETUS_EXPORT_URL = 'https://letus.ed.tus.ac.jp/calendar/export.php'
 
 // 「取り込み」の画面：LETUS の課題を、手で入力せずに入れる
-// 1. ファイルを選ぶ → 2. 何が変わるかを確認 → 3. 取り込む
+// 1. カレンダーURLから受け取る（またはファイルを選ぶ） → 2. 何が変わるかを確認 → 3. 取り込む
 export function ImportView({ tasks, lastImport, now, onImport }) {
   const [preview, setPreview] = useState(null) // 確認中の内容
   const [error, setError] = useState('')
   const [message, setMessage] = useState('') // 取り込み後のお知らせ
   // 締切を過ぎた新しい課題を「完了」にして取り込むか（最初はオン）
   const [markPastAsDone, setMarkPastAsDone] = useState(true)
+  // 保存してあるカレンダーURL（なければ null）と、LETUS から受け取っている最中か
+  const [calendarUrl, setCalendarUrl] = useState(loadCalendarUrl)
+  const [isLoading, setIsLoading] = useState(false)
 
   // .ics の中身を読んで、取り込んだら何が変わるかを計算する（まだ反映はしない）
   function prepare(text, fileName, isSample) {
@@ -52,6 +62,34 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
     }
   }
 
+  // カレンダーURLを使って、LETUS から最新の .ics を受け取る
+  async function fetchFromLetus(url = calendarUrl) {
+    setIsLoading(true)
+    setError('')
+    setMessage('')
+    try {
+      prepare(await fetchLetusIcs(url), 'LETUS（カレンダーURL）', false)
+    } catch (e) {
+      setPreview(null)
+      setError(e.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // URL を保存したら、そのまま1回受け取ってみる
+  function handleSaveUrl(url) {
+    saveCalendarUrl(url)
+    setCalendarUrl(url)
+    fetchFromLetus(url)
+  }
+
+  function handleRemoveUrl() {
+    if (!window.confirm('この端末に保存したカレンダーURLを削除しますか？')) return
+    removeCalendarUrl()
+    setCalendarUrl(null)
+  }
+
   function trySample() {
     prepare(createSampleIcs(), 'サンプル（架空の授業）', true)
   }
@@ -87,21 +125,45 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
         {lastImport ? formatDateTime(lastImport) : 'まだ取り込んだことがありません'}
       </p>
 
-      {!preview && (
-        <div className="import-actions">
-          {/* ファイルを選ぶ欄は見た目を整えにくいので、label をボタンのように見せる */}
-          <label className="button button--primary import-file">
-            .ics ファイルを選ぶ
-            <input type="file" onChange={handleFileChange} />
-          </label>
-          <button type="button" className="button" onClick={trySample}>
-            サンプル（架空）で試す
-          </button>
-        </div>
-      )}
-
       {error && <p className="form__error">{error}</p>}
       {message && <p className="import-message">{message}</p>}
+
+      {!preview && (
+        <>
+          {calendarUrl ? (
+            <div className="import-card">
+              <p className="import-card__status">カレンダーURL：設定済み（この端末にだけ保存）</p>
+              <button
+                type="button"
+                className="button button--primary import-card__main"
+                onClick={() => fetchFromLetus()}
+                disabled={isLoading}
+              >
+                {isLoading ? 'LETUSから受け取っています…' : 'LETUSから最新の課題を取り込む'}
+              </button>
+              <div className="import-card__links">
+                <button type="button" className="link-button" onClick={handleRemoveUrl}>
+                  カレンダーURLを削除
+                </button>
+              </div>
+            </div>
+          ) : (
+            <CalendarUrlSetup onSave={handleSaveUrl} />
+          )}
+
+          <h3 className="import-sub-heading">ほかの方法</h3>
+          <div className="import-actions">
+            {/* ファイルを選ぶ欄は見た目を整えにくいので、label をボタンのように見せる */}
+            <label className="button import-file">
+              .ics ファイルを選ぶ
+              <input type="file" onChange={handleFileChange} />
+            </label>
+            <button type="button" className="button" onClick={trySample}>
+              サンプル（架空）で試す
+            </button>
+          </div>
+        </>
+      )}
 
       {preview && (
         <ImportPreview
@@ -115,24 +177,19 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
       )}
 
       <div className="import-help">
-        <h3 className="import-help__heading">LETUSから書き出す方法</h3>
+        <h3 className="import-help__heading">説明</h3>
 
-        <details className="import-help__item" open>
-          <summary>iPhone</summary>
-          <ol>
-            <li>
-              <strong>Googleアプリ</strong>で <a href={LETUS_EXPORT_URL} target="_blank" rel="noreferrer">{LETUS_EXPORT_URL}</a> を開く（ブックマークしておくと便利）
-              <br />
-              <small>※ SafariやChromeで開くとカレンダーに追加する画面になり、ファイルとして保存できません</small>
-            </li>
-            <li>「すべてのイベント」と、期間「最近および次の60日間」を選んで<strong>エクスポート</strong></li>
-            <li>共有 →「<strong>"ファイル"に保存</strong>」</li>
-            <li>Safariでこのアプリを開き、「.ics ファイルを選ぶ」から保存したファイルを選ぶ</li>
-          </ol>
+        <details className="import-help__item">
+          <summary>カレンダーURLのしくみ</summary>
+          <ul>
+            <li>LETUSの「カレンダーURL」は、ログインしなくても自分の予定を読めるURLです。一度このアプリに保存すれば、次からはボタン1つで最新の課題を取り込めます。</li>
+            <li>アプリから直接LETUSを読むことはブラウザの決まりでできないため、このアプリのサーバー側の処理（中継役）を通して受け取ります。中継役はURLを保存しません。</li>
+            <li>URLはパスワードと同じように大切に扱ってください。人に送ったり、SNSやチャットに貼ったりしないでください。</li>
+          </ul>
         </details>
 
         <details className="import-help__item">
-          <summary>PC</summary>
+          <summary>PCでファイルから取り込む</summary>
           <ol>
             <li>
               LETUSにログインした状態で <a href={LETUS_EXPORT_URL} target="_blank" rel="noreferrer">{LETUS_EXPORT_URL}</a> を開く
@@ -245,6 +302,64 @@ function ImportPreview({
           取り込む
         </button>
       </div>
+    </div>
+  )
+}
+
+// カレンダーURLの設定（最初の1回だけ）
+function CalendarUrlSetup({ onSave }) {
+  const [input, setInput] = useState('')
+  const [inputError, setInputError] = useState('')
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    const url = input.trim()
+    if (!isLetusCalendarUrl(url)) {
+      setInputError(
+        'LETUSのカレンダーURL（https://letus.ed.tus.ac.jp/calendar/export_execute.php で始まるURL）を貼り付けてください',
+      )
+      return
+    }
+    setInputError('')
+    onSave(url)
+  }
+
+  return (
+    <div className="import-card">
+      <h3 className="import-card__heading">最初の1回だけ：カレンダーURLを設定</h3>
+      <ol className="import-card__steps">
+        <li>
+          LETUSにログインして{' '}
+          <a href={LETUS_EXPORT_URL} target="_blank" rel="noreferrer">
+            書き出しページ
+          </a>{' '}
+          を開く（SafariでOK）
+        </li>
+        <li>「すべてのイベント」と、期間「最近および次の60日間」を選ぶ</li>
+        <li>
+          <strong>カレンダーURLを取得</strong> を押し、出てきたURLをコピーする
+        </li>
+        <li>下の欄に貼り付けて「保存して取り込む」</li>
+      </ol>
+      <form onSubmit={handleSubmit} className="import-card__form">
+        <input
+          type="url"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="https://letus.ed.tus.ac.jp/calendar/export_execute.php?…"
+          aria-label="LETUSのカレンダーURL"
+          autoComplete="off"
+          autoCapitalize="off"
+          spellCheck={false}
+        />
+        <button type="submit" className="button button--primary">
+          保存して取り込む
+        </button>
+      </form>
+      {inputError && <p className="form__error">{inputError}</p>}
+      <p className="import-card__note">
+        このURLはパスワードと同じです。この端末のブラウザの中にだけ保存し、人に送ったりしないでください。
+      </p>
     </div>
   )
 }

@@ -681,6 +681,84 @@ select {
   margin-bottom: 12px;
 }
 
+.import-card {
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.import-card__heading {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+.import-card__status {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.import-card__main {
+  width: 100%;
+  min-height: 48px;
+}
+
+.import-card__links {
+  margin-top: 6px;
+  text-align: right;
+}
+
+.import-card__links .link-button {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.import-card__steps {
+  margin: 0 0 12px;
+  padding-left: 1.4em;
+  font-size: 0.9rem;
+}
+
+.import-card__steps li {
+  margin-bottom: 4px;
+}
+
+.import-card__steps a {
+  color: var(--primary);
+}
+
+.import-card__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.import-card__form input {
+  flex: 1 1 220px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  /* スマホで入力時に画面が勝手に拡大されないよう、16px以上にする */
+  font-size: 16px;
+}
+
+.import-card__note {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: var(--text-sub);
+}
+
+.import-sub-heading {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
 /* ファイルを選ぶ欄は隠して、label をボタンとして見せる */
 .import-file {
   position: relative;
