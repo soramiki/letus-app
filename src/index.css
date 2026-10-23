@@ -961,10 +961,22 @@ select {
   gap: 8px;
 }
 
-/* ===== 通知の設定 ===== */
+/* ===== 通知の設定・再読み込み ===== */
 .icon-button {
   padding: 8px 10px;
   line-height: 1;
+}
+
+/* 再読み込み中は、↻ をくるくる回す */
+.spin {
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .notice-text {

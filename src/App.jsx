@@ -17,6 +17,7 @@ import {
   shouldRemind,
   startOfWeek,
 } from './utils/importReminder.js'
+import { reloadApp } from './utils/reloadApp.js'
 import { getSubjectColors } from './utils/subjectColors.js'
 
 function App() {
@@ -42,6 +43,14 @@ function App() {
   // 通知の設定の小窓が開いているか
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const closeNotification = useCallback(() => setIsNotificationOpen(false), [])
+
+  // 再読み込み中か（ボタンを回して、2回押されないようにする）
+  const [isReloading, setIsReloading] = useState(false)
+
+  function handleReload() {
+    setIsReloading(true)
+    reloadApp()
+  }
 
   // 一覧の検索・絞り込み・並び替えの条件（ホームとの行き来では残す。開き直すと初期値に戻る）
   const [conditions, setConditions] = useState(DEFAULT_CONDITIONS)
@@ -123,6 +132,18 @@ function App() {
       <header className="app-header">
         <h1>課題管理</h1>
         <div className="app-header__actions">
+          <button
+            type="button"
+            className="button icon-button"
+            onClick={handleReload}
+            disabled={isReloading}
+            aria-label="再読み込み"
+            title="再読み込み"
+          >
+            <span className={isReloading ? 'spin' : undefined} aria-hidden="true">
+              ↻
+            </span>
+          </button>
           <button
             type="button"
             className="button icon-button"
