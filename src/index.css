@@ -495,14 +495,18 @@ select {
 
 /* ===== タイムライン ===== */
 .timeline {
-  /* 中身が横に長いので、この枠の中だけ横スクロールさせる */
+  /* 画面の高さに収まる枠の中で、縦にも横にもスクロールする
+     （日付の行と科目の列を固定して見せるため。表計算ソフトの「先頭の行と列を固定」と同じ） */
   position: relative;
   z-index: 0;
-  overflow-x: auto;
+  overflow: auto;
+  max-height: calc(100vh - 230px);
+  max-height: calc(100dvh - 230px - env(safe-area-inset-bottom));
+  min-height: 240px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
-  --tl-label-width: 112px;
+  --tl-label-width: 104px;
 }
 
 @media (min-width: 601px) {
@@ -514,6 +518,13 @@ select {
 .timeline__inner {
   position: relative;
   width: calc(var(--tl-label-width) + var(--tl-track-width));
+  padding-bottom: 8px;
+}
+
+.timeline-note {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: var(--danger);
 }
 
 .timeline-empty {
@@ -525,7 +536,7 @@ select {
   color: var(--text-sub);
 }
 
-/* 背景の縦の区切りと今日の線（上から一番下まで） */
+/* 背景の縦の区切りと今の線（上から一番下まで） */
 .tl-grid {
   position: absolute;
   top: 0;
@@ -558,15 +569,28 @@ select {
 .tl-row {
   position: relative;
   display: flex;
-  min-height: 34px;
+  height: 34px;
 }
 
+/* 科目の1段目の上に区切り線を引いて、科目ごとのまとまりを分かりやすくする */
+.tl-row--first {
+  border-top: 1px solid var(--border);
+}
+
+/* 日付の行：縦にスクロールしても上に残る */
 .tl-row--header {
-  min-height: 44px;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 44px;
   border-bottom: 1px solid var(--border);
 }
 
-/* 左の名前の列（横スクロールしても左に残る） */
+.tl-row--header .tl-track {
+  background: var(--surface);
+}
+
+/* 左の科目の列：横にスクロールしても左に残る */
 .tl-label {
   position: sticky;
   left: 0;
@@ -576,36 +600,25 @@ select {
   align-items: center;
   gap: 6px;
   min-width: 0;
-  padding: 4px 8px;
-  border: none;
+  padding: 0 8px;
   border-right: 1px solid var(--border);
   background: var(--surface);
   font-size: 0.8rem;
-  text-align: left;
-  overflow: hidden;
+  font-weight: 700;
 }
 
+/* 左上の角は、上にも左にも固定されるので一番手前に出す */
 .tl-row--header .tl-label {
+  z-index: 4;
+  font-weight: normal;
   color: var(--text-sub);
 }
 
-.tl-label--subject {
-  font-weight: 700;
-  padding-top: 10px;
-}
-
-.tl-label--task {
-  padding-left: 24px;
-  cursor: pointer;
-  /* 長い課題名は「…」で省略する */
-  display: block;
-  line-height: 26px;
+/* 長い科目名は「…」で省略する */
+.tl-label__text {
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.tl-row--overdue .tl-label--task {
-  color: var(--danger);
 }
 
 .tl-dot {
@@ -643,34 +656,36 @@ select {
   color: var(--now-line);
 }
 
-/* 開始〜締切の帯 */
+/* 開始〜締切の帯（丸の後ろに細く引く） */
 .tl-bar {
   position: absolute;
-  top: 8px;
-  height: 18px;
-  padding: 0;
-  border: none;
-  border-radius: 9px;
-  cursor: pointer;
+  top: 12px;
+  height: 10px;
+  border-radius: 5px;
+  opacity: 0.55;
 }
 
-/* 開始日がない課題の、締切の◆印 */
-.tl-marker {
+/* 締切の丸。中に「第〇回」などの番号 */
+.tl-badge {
   position: absolute;
-  top: 10px;
-  width: 14px;
-  height: 14px;
-  margin-left: -7px;
+  top: 6px;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
   padding: 0;
-  border: none;
-  transform: rotate(45deg);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  color: #fff;
   cursor: pointer;
 }
 
 /* 期限切れの課題は薄くする */
-.tl-row--overdue .tl-bar,
-.tl-row--overdue .tl-marker {
-  opacity: 0.45;
+.tl-item--overdue {
+  opacity: 0.4;
 }
 
 /* ===== 取り込み ===== */

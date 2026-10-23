@@ -8,7 +8,7 @@ export function TimelineView({ tasks, subjects, subjectColors, now, onEdit }) {
         タイムライン
       </h2>
       <p className="page-note">
-        帯は開始〜締切、◆は締切（開始日なし）。赤い線が今です。タップすると編集できます。
+        丸＝締切（数字は「第〇回」などの番号）、帯＝開始〜締切、赤い線＝今。丸をタップで課題名を確認。
       </p>
       <Timeline
         tasks={tasks}
