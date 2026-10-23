@@ -14,7 +14,7 @@ import { createSampleIcs } from '../utils/sampleIcs.js'
 const LETUS_EXPORT_URL = 'https://letus.ed.tus.ac.jp/calendar/export.php'
 
 // 「取り込み」の画面：LETUS の課題を、手で入力せずに入れる
-// 1. カレンダーURLから受け取る（またはファイルを選ぶ） → 2. 何が変わるかを確認 → 3. 取り込む
+// 1. カレンダーURLから受け取る（またはサンプルを使う） → 2. 何が変わるかを確認 → 3. 取り込む
 export function ImportView({ tasks, lastImport, now, onImport }) {
   const [preview, setPreview] = useState(null) // 確認中の内容
   const [error, setError] = useState('')
@@ -50,18 +50,6 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
     })
   }
 
-  async function handleFileChange(e) {
-    const file = e.target.files[0]
-    e.target.value = '' // 同じファイルをもう一度選んでも反応するように、選択を空に戻す
-    if (!file) return
-    try {
-      prepare(await file.text(), file.name, false)
-    } catch {
-      setPreview(null)
-      setError('ファイルを読み込めませんでした。')
-    }
-  }
-
   // カレンダーURLを使って、LETUS から最新の .ics を受け取る
   async function fetchFromLetus(url = calendarUrl) {
     setIsLoading(true)
@@ -92,17 +80,6 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
 
   function trySample() {
     prepare(createSampleIcs(), 'サンプル（架空の授業）', true)
-  }
-
-  // サンプルの .ics をファイルとして保存する（ファイルを選ぶ流れも試せるように）
-  function downloadSample() {
-    const blob = new Blob([createSampleIcs()], { type: 'text/calendar' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'sample.ics'
-    a.click()
-    URL.revokeObjectURL(url)
   }
 
   function confirmImport() {
@@ -150,18 +127,6 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
           ) : (
             <CalendarUrlSetup onSave={handleSaveUrl} />
           )}
-
-          <h3 className="import-sub-heading">ほかの方法</h3>
-          <div className="import-actions">
-            {/* ファイルを選ぶ欄は見た目を整えにくいので、label をボタンのように見せる */}
-            <label className="button import-file">
-              .ics ファイルを選ぶ
-              <input type="file" onChange={handleFileChange} />
-            </label>
-            <button type="button" className="button" onClick={trySample}>
-              サンプル（架空）で試す
-            </button>
-          </div>
         </>
       )}
 
@@ -189,19 +154,6 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
         </details>
 
         <details className="import-help__item">
-          <summary>PCでファイルから取り込む</summary>
-          <ol>
-            <li>
-              LETUSにログインした状態で <a href={LETUS_EXPORT_URL} target="_blank" rel="noreferrer">{LETUS_EXPORT_URL}</a> を開く
-              <br />
-              <small>※ LETUSのメニューにはカレンダーがないので、このURLを直接開きます</small>
-            </li>
-            <li>「すべてのイベント」と、期間「最近および次の60日間」を選んで<strong>エクスポート</strong></li>
-            <li>ダウンロードされた <code>icalexport.ics</code> を、「.ics ファイルを選ぶ」から選ぶ</li>
-          </ol>
-        </details>
-
-        <details className="import-help__item">
           <summary>取り込みのルール</summary>
           <ul>
             <li>「〇〇の提出期限」と「〇〇の受験可能期間の終了」は締切、「〇〇の受験可能期間の開始」は開始日時として取り込みます。</li>
@@ -213,11 +165,11 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
         </details>
 
         <p className="import-help__sample">
-          LETUSを使っていない方は、「サンプル（架空）で試す」か、
-          <button type="button" className="link-button" onClick={downloadSample}>
-            サンプルの .ics を保存
+          LETUSを使っていない方は、
+          <button type="button" className="link-button" onClick={trySample}>
+            サンプル（架空の授業）で試す
           </button>
-          して読み込んでみてください。
+          こともできます。
         </p>
       </div>
     </section>

@@ -689,13 +689,6 @@ select {
 }
 
 /* ===== 取り込み ===== */
-.import-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
 .import-card {
   margin-bottom: 16px;
   padding: 14px;
@@ -766,32 +759,6 @@ select {
   margin: 8px 0 0;
   font-size: 0.78rem;
   color: var(--text-sub);
-}
-
-.import-sub-heading {
-  margin: 0 0 8px;
-  font-size: 0.85rem;
-  color: var(--text-sub);
-}
-
-/* ファイルを選ぶ欄は隠して、label をボタンとして見せる */
-.import-file {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-
-.import-file input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-/* キーボードで選んだときに、どこにいるか分かるようにする */
-.import-file:focus-within {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
 }
 
 .import-message {
