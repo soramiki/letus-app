@@ -27,3 +27,5 @@ dist-ssr
 *.ics
 # 動作確認用の架空サンプルだけは入れる
 !sample*.ics
+.vercel
+.env*
