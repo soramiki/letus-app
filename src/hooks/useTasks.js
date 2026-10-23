@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { createId } from '../utils/id.js'
 import { importEvents } from '../utils/importEvents.js'
 import { createSampleTasks, isSampleTask } from '../utils/sampleTasks.js'
+import { saveTaskSnapshot } from '../utils/taskSnapshot.js'
 
 // LocalStorage（ブラウザの中の保存場所）に保存するときの名前
 const STORAGE_KEY = 'letus-app.tasks'
@@ -24,8 +25,10 @@ export function useTasks() {
   const [tasks, setTasks] = useState(loadTasks)
 
   // tasks が変わるたびに、LocalStorage に書き込む
+  // あわせて、通知のための写しも IndexedDB に置く（失敗しても、通知の件数が古くなるだけ）
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+    saveTaskSnapshot(tasks).catch(() => {})
   }, [tasks])
 
   // fields: { subject, title, startAt, dueAt }

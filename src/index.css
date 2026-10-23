@@ -105,6 +105,11 @@ select {
   color: var(--text-sub);
 }
 
+.app-header__actions {
+  display: flex;
+  gap: 8px;
+}
+
 /* ===== ボタン ===== */
 .button {
   min-height: 40px;
@@ -954,6 +959,55 @@ select {
 .import-reminder__actions {
   display: flex;
   gap: 8px;
+}
+
+/* ===== 通知の設定 ===== */
+.icon-button {
+  padding: 8px 10px;
+  line-height: 1;
+}
+
+.notice-text {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+}
+
+.notice-text small {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: var(--text-sub);
+}
+
+.notice-box {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 0.88rem;
+}
+
+.notice-box p {
+  margin: 0 0 6px;
+}
+
+.notice-box ol {
+  margin: 0 0 6px;
+  padding-left: 1.4em;
+}
+
+.notice-box small {
+  color: var(--text-sub);
+}
+
+.notice-status {
+  margin: 0 0 12px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.notice-status--on {
+  color: var(--primary);
 }
 
 /* ===== モーダル ===== */

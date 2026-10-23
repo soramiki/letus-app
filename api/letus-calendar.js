@@ -9,26 +9,12 @@
 // ・URL は保存も記録（ログ）もしない。URL にはパスワードのような情報（authtoken）が入っているため
 // ・URL はアドレスに入れず、POST の本文で受け取る（アドレスはサーバーの記録に残りやすいため）
 
+import { readJsonBody, send } from './_lib/http.js'
+
 const ALLOWED_HOST = 'letus.ed.tus.ac.jp'
 const ALLOWED_PATH = '/calendar/export_execute.php'
 const TIMEOUT_MS = 15000
 const MAX_BYTES = 2 * 1024 * 1024 // 2MB（普通の .ics は数十KB）
-
-// 本文（JSON）を読む。Vercel では読み込み済みのことがあるので、両方に対応する
-async function readJsonBody(req) {
-  if (req.body && typeof req.body === 'object') return req.body
-  if (typeof req.body === 'string') return JSON.parse(req.body)
-  const chunks = []
-  for await (const chunk of req) chunks.push(chunk)
-  return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}')
-}
-
-function send(res, status, body, contentType = 'application/json; charset=utf-8') {
-  res.statusCode = status
-  res.setHeader('Content-Type', contentType)
-  res.setHeader('Cache-Control', 'no-store')
-  res.end(typeof body === 'string' ? body : JSON.stringify(body))
-}
 
 // LETUS のカレンダーの書き出し用URLかどうか
 export function isLetusCalendarUrl(value) {

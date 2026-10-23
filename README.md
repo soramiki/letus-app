@@ -36,6 +36,8 @@
 - LETUSの「カレンダーURL」を最初に1回保存すれば、次からはボタン1つで最新の課題を取り込める（ログイン不要）
 - 取り込む前に「追加・更新・変更なし」の件数と内容を確認できる。開始と終了の予定は1件にまとめ、締切の延長にも対応。締切を過ぎた課題は「完了」にして取り込める
 - 週の初めに、ホームで「LETUSの課題を取り込みましょう」とお知らせ
+- 毎朝の通知（7時ごろ）：今日締切・今日始める・期限切れの件数と課題名。件数は端末の中で数え、課題の内容はサーバーに送らない
+- PWA：ホーム画面に追加すると、アプリとして全画面で開ける。電波がなくても開ける
 - 画面の下のタブで、ホーム／一覧／タイムライン／取り込みを切り替え
 - サンプルの課題で試す（課題が0件のときにホームから。架空の授業名。まとめて消せる）
 
@@ -46,7 +48,10 @@
 - JavaScript
 - CSS
 - LocalStorage
-- Vercel Serverless Functions（LETUSのカレンダーを受け取る中継役。`api/letus-calendar.js`）
+- PWA（vite-plugin-pwa、Service Worker、Web App Manifest）
+- Web Push（web-push、VAPID）／ Vercel Cron（毎朝の合図）／ Upstash Redis（通知の宛先だけを保存）
+- IndexedDB（通知の件数を数えるための、課題の写し。端末の中だけ）
+- Vercel Serverless Functions（LETUSのカレンダーを受け取る中継役 `api/letus-calendar.js`、通知の登録・送信 `api/push-*.js`・`api/cron-daily.js`）
 - GitHub / Vercel
 
 ## ローカル環境での起動手順
