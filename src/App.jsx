@@ -180,6 +180,7 @@ function App() {
           <ListView
             tasks={tasks}
             subjects={subjects}
+            subjectColors={subjectColors}
             conditions={conditions}
             now={now}
             onChangeCondition={changeCondition}

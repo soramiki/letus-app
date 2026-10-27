@@ -7,6 +7,7 @@ export function TaskList({
   tasks,
   hasAnyTask,
   now,
+  subjectColors,
   missedCounts,
   onToggleDone,
   onEdit,
@@ -41,6 +42,7 @@ export function TaskList({
           key={task.id}
           task={task}
           now={now}
+          subjectColor={subjectColors?.[task.subject]}
           missedCount={missedCounts?.[task.subject] ?? 0}
           onToggleDone={onToggleDone}
           onEdit={onEdit}

@@ -94,6 +94,7 @@ export function HomeView({
                 tasks={groups[key]}
                 hasAnyTask
                 now={now}
+                subjectColors={subjectColors}
                 // 期限切れには「提出できた／できなかった」、それ以外には未達成の多い科目の注意を出す
                 missedCounts={key === 'overdue' ? undefined : missedCounts}
                 onToggleDone={onToggleDone}

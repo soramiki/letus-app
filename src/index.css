@@ -269,6 +269,8 @@ select {
 
 .task-item {
   border: 1px solid var(--border);
+  /* 左の太い線は科目の色（タイムラインと同じ色） */
+  border-left: 5px solid var(--subject-color, var(--border));
   border-radius: var(--radius);
   background: var(--surface);
 }
@@ -492,6 +494,15 @@ select {
   background: none;
   text-align: left;
   cursor: pointer;
+}
+
+.task-item__subject .tl-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  background: var(--subject-color);
+  vertical-align: 1px;
 }
 
 .task-item__subject {

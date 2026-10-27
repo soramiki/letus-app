@@ -11,14 +11,18 @@ const DUE_LABELS = {
 // 課題1件分の表示
 // onResult：渡されたときだけ、期限切れの課題に「提出できた／できなかった」のボタンを出す（ホーム用）
 // missedCount：この科目の未達成の回数。1回以上なら注意を出す（ホーム用）
-export function TaskItem({ task, now, missedCount = 0, onToggleDone, onEdit, onResult }) {
+// subjectColor：科目の色（タイムラインと同じ色）。左の線と、科目名の前の丸に使う
+export function TaskItem({ task, now, subjectColor, missedCount = 0, onToggleDone, onEdit, onResult }) {
   const status = task.done ? 'done' : task.missed ? 'missed' : getDueStatus(task.dueAt, now)
   // 始める日時は、まだ締切前の未完了の課題にだけ出す
   const startAt = status === 'today' || status === 'later' ? getStartAt(task, now) : null
   const showResultButtons = onResult && status === 'overdue'
 
   return (
-    <li className={`task-item task-item--${status}`}>
+    <li
+      className={`task-item task-item--${status}`}
+      style={subjectColor ? { '--subject-color': subjectColor } : undefined}
+    >
       <div className="task-item__main">
         <input
           type="checkbox"
@@ -28,7 +32,10 @@ export function TaskItem({ task, now, missedCount = 0, onToggleDone, onEdit, onR
           aria-label={`${task.title}を完了にする`}
         />
         <button type="button" className="task-item__body" onClick={() => onEdit(task)}>
-          <span className="task-item__subject">{task.subject}</span>
+          <span className="task-item__subject">
+            {subjectColor && <span className="tl-dot" aria-hidden="true" />}
+            {task.subject}
+          </span>
           <span className="task-item__title">{task.title}</span>
           <span className="task-item__due">
             {task.dueAt ? `締切 ${formatDateTime(task.dueAt)}` : '締切未定'}

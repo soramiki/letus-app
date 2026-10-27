@@ -7,6 +7,7 @@ import { TaskToolbar } from './TaskToolbar.jsx'
 export function ListView({
   tasks,
   subjects,
+  subjectColors,
   conditions,
   now,
   onChangeCondition,
@@ -33,6 +34,7 @@ export function ListView({
         tasks={visibleTasks}
         hasAnyTask={tasks.length > 0}
         now={now}
+        subjectColors={subjectColors}
         onToggleDone={onToggleDone}
         onEdit={onEdit}
         onResult={onResult}
