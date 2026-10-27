@@ -33,7 +33,7 @@ export function useTasks() {
 
   // fields: { subject, title, startAt, dueAt }
   function addTask(fields) {
-    const task = { id: createId(), done: false, letusUids: [], ...fields }
+    const task = { id: createId(), done: false, missed: false, letusUids: [], ...fields }
     setTasks((prev) => [...prev, task])
   }
 
@@ -45,8 +45,21 @@ export function useTasks() {
     setTasks((prev) => prev.filter((task) => task.id !== id))
   }
 
+  // 完了チェックを切り替える（完了にしたら「未達成」は外す）
   function toggleDone(id) {
-    setTasks((prev) => prev.map((task) => (task.id === id ? { ...task, done: !task.done } : task)))
+    setTasks((prev) =>
+      prev.map((task) => (task.id === id ? { ...task, done: !task.done, missed: false } : task)),
+    )
+  }
+
+  // 期限切れの課題を振り分ける
+  // result：'done'＝提出できた / 'missed'＝提出できなかった / 'open'＝振り分けを取り消す
+  function setResult(id, result) {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, done: result === 'done', missed: result === 'missed' } : task,
+      ),
+    )
   }
 
   // .ics から読み込んだ予定を反映する（ルールは importEvents.js）
@@ -70,6 +83,7 @@ export function useTasks() {
     updateTask,
     deleteTask,
     toggleDone,
+    setResult,
     importLetusEvents,
     addSampleTasks,
     removeSampleTasks,

@@ -18,7 +18,8 @@ export function summarizeTasks(tasks, now = new Date()) {
   const groups = { overdue: [], dueToday: [], startToday: [] }
 
   for (const task of tasks) {
-    if (task.done || !task.dueAt) continue
+    // 完了・未達成（振り分け済み）・締切未定は数えない
+    if (task.done || task.missed || !task.dueAt) continue
     const due = new Date(task.dueAt)
 
     if (due < now) {

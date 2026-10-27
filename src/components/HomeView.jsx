@@ -1,5 +1,7 @@
 import { formatDate } from '../utils/date.js'
+import { getMissedCountBySubject } from '../utils/missedStats.js'
 import { ImportReminder } from './ImportReminder.jsx'
+import { MissedStats } from './MissedStats.jsx'
 import { isSampleTask } from '../utils/sampleTasks.js'
 import { SUMMARY_GROUPS, summarizeTasks } from '../utils/summary.js'
 import { TaskList } from './TaskList.jsx'
@@ -8,8 +10,10 @@ import { TaskList } from './TaskList.jsx'
 export function HomeView({
   tasks,
   now,
+  subjectColors,
   onToggleDone,
   onEdit,
+  onResult,
   onAdd,
   onAddSamples,
   onRemoveSamples,
@@ -42,6 +46,7 @@ export function HomeView({
   const groups = summarizeTasks(tasks, now)
   const hasSamples = tasks.some(isSampleTask)
   const hasTodo = SUMMARY_GROUPS.some(({ key }) => groups[key].length > 0)
+  const missedCounts = getMissedCountBySubject(tasks)
 
   // 要約の数字をタップしたら、その課題のまとまりまでスクロールする
   function scrollToGroup(key) {
@@ -89,8 +94,11 @@ export function HomeView({
                 tasks={groups[key]}
                 hasAnyTask
                 now={now}
+                // 期限切れには「提出できた／できなかった」、それ以外には未達成の多い科目の注意を出す
+                missedCounts={key === 'overdue' ? undefined : missedCounts}
                 onToggleDone={onToggleDone}
                 onEdit={onEdit}
+                onResult={key === 'overdue' ? onResult : undefined}
               />
             </div>
           ))
@@ -98,6 +106,8 @@ export function HomeView({
           <p className="summary-clear">今日やることはありません。</p>
         )}
       </section>
+
+      <MissedStats tasks={tasks} now={now} subjectColors={subjectColors} />
 
       <button type="button" className="link-button home-link" onClick={onShowTimeline}>
         この先の予定をタイムラインで見る →

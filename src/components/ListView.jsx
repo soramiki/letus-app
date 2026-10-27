@@ -13,6 +13,7 @@ export function ListView({
   onResetConditions,
   onToggleDone,
   onEdit,
+  onResult,
 }) {
   // 絞り込み結果と並び順は保存せず、表示のたびに計算する
   const visibleTasks = sortTasks(filterTasks(tasks, conditions), conditions.sort)
@@ -34,6 +35,7 @@ export function ListView({
         now={now}
         onToggleDone={onToggleDone}
         onEdit={onEdit}
+        onResult={onResult}
         onResetConditions={onResetConditions}
       />
     </>

@@ -50,6 +50,7 @@ export function importEvents(tasks, events, createId, { markPastAsDone = false, 
       startAt: null,
       dueAt: null,
       done: false,
+      missed: false,
       letusUids: [event.uid],
     }
     newTask[field] = event.at

@@ -268,13 +268,16 @@ select {
 }
 
 .task-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.task-item__main {
   display: flex;
   align-items: center;
   gap: 4px;
   padding-left: 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
 }
 
 .task-item--overdue {
@@ -291,6 +294,146 @@ select {
 
 .task-item--done .task-item__title {
   text-decoration: line-through;
+}
+
+/* 未達成：薄くして、ラベルで分かるようにする */
+.task-item--missed {
+  opacity: 0.7;
+}
+
+/* 期限切れの「提出できた／できなかった」ボタン */
+.task-item__result {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 12px 10px;
+}
+
+.task-item__result .button {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+}
+
+.task-item__result .button--danger {
+  margin-right: 0;
+  background: var(--surface);
+}
+
+.task-item__result .link-button {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+/* 未達成の多い科目の注意（回数で色を強くする） */
+.task-item__warning {
+  margin-top: 2px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.task-item__warning--caution,
+.missed-stats__row--caution {
+  --missed-color: #a07800;
+  --missed-bg: #fff6d6;
+}
+
+.task-item__warning--warning,
+.missed-stats__row--warning {
+  --missed-color: #c25a00;
+  --missed-bg: #ffead6;
+}
+
+.task-item__warning--danger,
+.missed-stats__row--danger {
+  --missed-color: #c62828;
+  --missed-bg: #fde4e4;
+}
+
+@media (prefers-color-scheme: dark) {
+  .task-item__warning--caution,
+  .missed-stats__row--caution {
+    --missed-color: #f0c860;
+    --missed-bg: #3a3220;
+  }
+
+  .task-item__warning--warning,
+  .missed-stats__row--warning {
+    --missed-color: #ffa060;
+    --missed-bg: #3d2a1c;
+  }
+
+  .task-item__warning--danger,
+  .missed-stats__row--danger {
+    --missed-color: #ff7b7b;
+    --missed-bg: #3d2024;
+  }
+}
+
+.task-item__warning {
+  color: var(--missed-color);
+  background: var(--missed-bg);
+}
+
+/* ===== 提出できなかった回数（ホーム） ===== */
+.missed-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.missed-stats__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    'subject dots count'
+    'subject rate rate';
+  align-items: center;
+  column-gap: 10px;
+  padding: 8px 12px;
+  border-left: 4px solid var(--missed-color);
+  border-radius: var(--radius);
+  background: var(--missed-bg);
+}
+
+.missed-stats__subject {
+  grid-area: subject;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.missed-stats__name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.missed-stats__dots {
+  grid-area: dots;
+  letter-spacing: 1px;
+  color: var(--missed-color);
+}
+
+.missed-stats__count {
+  grid-area: count;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--missed-color);
+}
+
+.missed-stats__rate {
+  grid-area: rate;
+  justify-self: end;
+  font-size: 0.75rem;
+  color: var(--text-sub);
 }
 
 .task-item__check {

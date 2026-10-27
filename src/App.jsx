@@ -27,6 +27,7 @@ function App() {
     updateTask,
     deleteTask,
     toggleDone,
+    setResult,
     importLetusEvents,
     addSampleTasks,
     removeSampleTasks,
@@ -164,8 +165,10 @@ function App() {
           <HomeView
             tasks={tasks}
             now={now}
+            subjectColors={subjectColors}
             onToggleDone={toggleDone}
             onEdit={openEditForm}
+            onResult={setResult}
             onAdd={openAddForm}
             onAddSamples={addSampleTasks}
             onRemoveSamples={removeSampleTasks}
@@ -183,6 +186,7 @@ function App() {
             onResetConditions={resetConditions}
             onToggleDone={toggleDone}
             onEdit={openEditForm}
+            onResult={setResult}
           />
         )}
         {view === 'timeline' && (

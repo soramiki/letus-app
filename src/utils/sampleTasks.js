@@ -30,16 +30,25 @@ export function createSampleTasks(now = new Date()) {
     ['基礎化学実験', 'レポート2', at(now, 1, '13:00'), at(now, 8, '17:00')],
     ['プログラミング演習', '小テスト（受験可能期間）', at(now, 4, '09:00'), at(now, 11, '23:59')],
     ['English Communication', '単語テストの範囲を確認', null, null],
-    ['基礎化学実験', 'レポート1', null, at(now, -6, '17:00'), true],
+    ['基礎化学実験', 'レポート1', null, at(now, -6, '17:00'), 'done'],
+    // 過去の記録（「提出できなかった回数」を見られるように）
+    ['線形代数入門', '第1回 演習問題', null, at(now, -15, '23:59'), 'missed'],
+    ['線形代数入門', '第2回 演習問題', null, at(now, -8, '23:59'), 'missed'],
+    ['線形代数入門', '小テスト1', null, at(now, -11, '23:59'), 'done'],
+    ['プログラミング演習', '課題2 条件分岐', null, at(now, -10, '23:59'), 'missed'],
+    ['プログラミング演習', '課題1 はじめてのプログラム', null, at(now, -17, '23:59'), 'done'],
+    ['プログラミング演習', '課題3 くり返し', null, at(now, -3, '23:59'), 'done'],
   ]
 
-  return list.map(([subject, title, startAt, dueAt, done = false], i) => ({
+  // 最後の項目：'done'＝提出できた / 'missed'＝提出できなかった / なし＝まだ途中
+  return list.map(([subject, title, startAt, dueAt, result], i) => ({
     id: `${SAMPLE_ID_PREFIX}${i + 1}`,
     subject,
     title,
     startAt,
     dueAt,
-    done,
+    done: result === 'done',
+    missed: result === 'missed',
     letusUids: [],
   }))
 }

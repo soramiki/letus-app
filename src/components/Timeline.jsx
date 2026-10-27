@@ -48,7 +48,7 @@ export function Timeline({ tasks, subjects, subjectColors, now, onEdit }) {
 
   // 締切のある未完了の課題だけを出す
   // 表示期間より前に締切が過ぎたものは、左端に積み重なって見づらくなるので出さない（数だけ知らせる）
-  const undone = tasks.filter((task) => !task.done && task.dueAt)
+  const undone = tasks.filter((task) => !task.done && !task.missed && task.dueAt)
   const targets = undone.filter((task) => new Date(task.dueAt) >= rangeStart)
   const hiddenOverdueCount = undone.length - targets.length
 

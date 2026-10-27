@@ -15,10 +15,11 @@ function compareDue(a, b, direction) {
 }
 
 // 表示する順番に並べ替える
-// どの順でも、未完了 → 完了済み の順にする
+// どの順でも、まだ途中の課題 → 終わった課題（完了・未達成）の順にする
 export function sortTasks(tasks, order = 'dueAsc') {
+  const isClosed = (task) => Boolean(task.done || task.missed)
   return [...tasks].sort((a, b) => {
-    if (a.done !== b.done) return a.done ? 1 : -1
+    if (isClosed(a) !== isClosed(b)) return isClosed(a) ? 1 : -1
 
     if (order === 'subject') {
       // 科目名の五十音順。同じ科目の中では締切が近い順

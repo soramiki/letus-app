@@ -2,6 +2,7 @@
 export const STATUS_OPTIONS = [
   { value: 'todo', label: '未完了' },
   { value: 'done', label: '完了' },
+  { value: 'missed', label: '未達成' },
   { value: 'all', label: 'すべて' },
 ]
 
@@ -19,8 +20,9 @@ export function filterTasks(tasks, { keyword, status, subject }) {
   const word = keyword.trim().toLowerCase()
 
   return tasks.filter((task) => {
-    if (status === 'todo' && task.done) return false
+    if (status === 'todo' && (task.done || task.missed)) return false
     if (status === 'done' && !task.done) return false
+    if (status === 'missed' && !task.missed) return false
     if (subject && task.subject !== subject) return false
     if (word) {
       const text = `${task.subject} ${task.title}`.toLowerCase()
