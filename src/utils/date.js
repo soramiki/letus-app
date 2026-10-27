@@ -49,6 +49,15 @@ export function diffDays(a, b) {
   return Math.round((startOfDay(b) - startOfDay(a)) / DAY_MS)
 }
 
+// Date → '2026-10-20T08:50'（このアプリで日時を保存する形。日本時間）
+export function toDateTimeValue(date) {
+  const pad = (n) => String(n).padStart(2, '0')
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+    `T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  )
+}
+
 // a から b までの長さを「日」で返す（小数あり。タイムラインの位置計算に使う）
 export function daysBetween(a, b) {
   return (b - a) / DAY_MS

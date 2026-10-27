@@ -18,14 +18,18 @@ import {
   startOfWeek,
 } from './utils/importReminder.js'
 import { reloadApp } from './utils/reloadApp.js'
+import { createId } from './utils/id.js'
+import { createWeeklyTasks } from './utils/repeat.js'
 import { getSubjectColors } from './utils/subjectColors.js'
 
 function App() {
   const {
     tasks,
     addTask,
+    addTasks,
     updateTask,
     deleteTask,
+    deleteSeriesFrom,
     toggleDone,
     setResult,
     importLetusEvents,
@@ -109,17 +113,22 @@ function App() {
   // TaskForm の useEffect が毎回やり直しにならないよう、同じ関数を使い回す
   const closeForm = useCallback(() => setIsFormOpen(false), [])
 
-  function handleSave(fields) {
+  // repeat：毎週くり返すときだけ { count, startNumber }（それ以外は null）
+  function handleSave(fields, repeat) {
     if (editingTask) {
       updateTask(editingTask.id, fields)
+    } else if (repeat) {
+      addTasks(createWeeklyTasks(fields, { ...repeat, seriesId: createId() }))
     } else {
       addTask(fields)
     }
     closeForm()
   }
 
-  function handleDelete(id) {
-    deleteTask(id)
+  // following：くり返しの課題を、この回以降まとめて削除するか
+  function handleDelete(task, { following }) {
+    if (following) deleteSeriesFrom(task)
+    else deleteTask(task.id)
     closeForm()
   }
 

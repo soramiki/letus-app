@@ -31,9 +31,21 @@ export function useTasks() {
   }, [tasks])
 
   // fields: { subject, title, startAt, dueAt }
+  // 毎週くり返す課題は、1週ずつ別の課題として、まとめて追加する（fields の配列を渡す）
+  function addTasks(fieldsList) {
+    const newTasks = fieldsList.map((fields) => ({
+      id: createId(),
+      done: false,
+      missed: false,
+      letusUids: [],
+      seriesId: null,
+      ...fields,
+    }))
+    setTasks((prev) => [...prev, ...newTasks])
+  }
+
   function addTask(fields) {
-    const task = { id: createId(), done: false, missed: false, letusUids: [], ...fields }
-    setTasks((prev) => [...prev, task])
+    addTasks([fields])
   }
 
   function updateTask(id, fields) {
@@ -42,6 +54,16 @@ export function useTasks() {
 
   function deleteTask(id) {
     setTasks((prev) => prev.filter((task) => task.id !== id))
+  }
+
+  // くり返しの課題を、この回（target）以降まとめて削除する（授業が終わったとき用）
+  function deleteSeriesFrom(target) {
+    setTasks((prev) =>
+      prev.filter(
+        (task) =>
+          !(task.seriesId === target.seriesId && (task.dueAt ?? '') >= (target.dueAt ?? '')),
+      ),
+    )
   }
 
   // 完了チェックを切り替える（完了にしたら「未達成」は外す）
@@ -70,8 +92,10 @@ export function useTasks() {
   return {
     tasks,
     addTask,
+    addTasks,
     updateTask,
     deleteTask,
+    deleteSeriesFrom,
     toggleDone,
     setResult,
     importLetusEvents,

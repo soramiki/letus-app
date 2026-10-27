@@ -1228,6 +1228,71 @@ select {
   }
 }
 
+/* ===== 毎週くり返す（追加の画面） ===== */
+.repeat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.repeat--on {
+  border-color: var(--primary);
+}
+
+.repeat__toggle,
+.repeat__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.repeat__toggle {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.repeat input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+.repeat input[type='number'] {
+  width: 64px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  /* スマホで入力時に画面が勝手に拡大されないよう、16px以上にする */
+  font-size: 16px;
+  text-align: center;
+}
+
+.repeat input[type='number']:disabled {
+  opacity: 0.4;
+}
+
+.repeat__preview {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.repeat__delete {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  color: var(--danger);
+}
+
 /* ===== フォーム ===== */
 .form {
   display: flex;
