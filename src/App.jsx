@@ -7,6 +7,7 @@ import { TabBar } from './components/TabBar.jsx'
 import { TaskForm } from './components/TaskForm.jsx'
 import { TimelineView } from './components/TimelineView.jsx'
 import { useNow } from './hooks/useNow.js'
+import { useSubjectColors } from './hooks/useSubjectColors.js'
 import { useTasks } from './hooks/useTasks.js'
 import { DEFAULT_CONDITIONS } from './utils/filterTasks.js'
 import {
@@ -20,7 +21,6 @@ import {
 import { reloadApp } from './utils/reloadApp.js'
 import { createId } from './utils/id.js'
 import { createWeeklyTasks } from './utils/repeat.js'
-import { getSubjectColors } from './utils/subjectColors.js'
 
 function App() {
   const {
@@ -62,11 +62,12 @@ function App() {
   const [lastImport, setLastImport] = useState(loadLastImport)
   const [dismissedWeek, setDismissedWeek] = useState(loadDismissedWeek)
 
-  // 科目の一覧と色は保存せず、表示のたびに tasks から計算する
+  // 科目の一覧は保存せず、表示のたびに tasks から計算する
   const subjects = [...new Set(tasks.map((task) => task.subject))].sort((a, b) =>
     a.localeCompare(b, 'ja'),
   )
-  const subjectColors = getSubjectColors(subjects)
+  // 科目の色は一度決まったら変えない（新しい科目にだけ色を割り当てる）
+  const subjectColors = useSubjectColors(subjects)
 
   // 条件を1つだけ変える（ほかの条件はそのまま）
   function changeCondition(name, value) {
