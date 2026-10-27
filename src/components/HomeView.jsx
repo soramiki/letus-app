@@ -1,7 +1,7 @@
 import { formatDate } from '../utils/date.js'
 import { getMissedCountBySubject } from '../utils/missedStats.js'
 import { ImportReminder } from './ImportReminder.jsx'
-import { MissedStats } from './MissedStats.jsx'
+import { MissedStatsButton } from './MissedStats.jsx'
 import { isSampleTask } from '../utils/sampleTasks.js'
 import { SUMMARY_GROUPS, summarizeTasks } from '../utils/summary.js'
 import { TaskList } from './TaskList.jsx'
@@ -107,7 +107,8 @@ export function HomeView({
         )}
       </section>
 
-      <MissedStats tasks={tasks} now={now} subjectColors={subjectColors} />
+      {/* 右下の丸いボタン：押すと「提出できなかった回数」を見られる */}
+      <MissedStatsButton tasks={tasks} subjectColors={subjectColors} />
 
       <button type="button" className="link-button home-link" onClick={onShowTimeline}>
         この先の予定をタイムラインで見る →

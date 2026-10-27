@@ -335,38 +335,44 @@ select {
 }
 
 .task-item__warning--caution,
-.missed-stats__row--caution {
+.missed-stats__row--caution,
+.fab--caution {
   --missed-color: #a07800;
   --missed-bg: #fff6d6;
 }
 
 .task-item__warning--warning,
-.missed-stats__row--warning {
+.missed-stats__row--warning,
+.fab--warning {
   --missed-color: #c25a00;
   --missed-bg: #ffead6;
 }
 
 .task-item__warning--danger,
-.missed-stats__row--danger {
+.missed-stats__row--danger,
+.fab--danger {
   --missed-color: #c62828;
   --missed-bg: #fde4e4;
 }
 
 @media (prefers-color-scheme: dark) {
   .task-item__warning--caution,
-  .missed-stats__row--caution {
+  .missed-stats__row--caution,
+  .fab--caution {
     --missed-color: #f0c860;
     --missed-bg: #3a3220;
   }
 
   .task-item__warning--warning,
-  .missed-stats__row--warning {
+  .missed-stats__row--warning,
+  .fab--warning {
     --missed-color: #ffa060;
     --missed-bg: #3d2a1c;
   }
 
   .task-item__warning--danger,
-  .missed-stats__row--danger {
+  .missed-stats__row--danger,
+  .fab--danger {
     --missed-color: #ff7b7b;
     --missed-bg: #3d2024;
   }
@@ -390,9 +396,7 @@ select {
 .missed-stats__row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  grid-template-areas:
-    'subject dots count'
-    'subject rate rate';
+  grid-template-areas: 'subject dots count';
   align-items: center;
   column-gap: 10px;
   padding: 8px 12px;
@@ -429,11 +433,44 @@ select {
   color: var(--missed-color);
 }
 
-.missed-stats__rate {
-  grid-area: rate;
-  justify-self: end;
-  font-size: 0.75rem;
-  color: var(--text-sub);
+/* ホームの右下の丸いボタン（提出できなかった回数） */
+.fab {
+  position: fixed;
+  right: 16px;
+  /* 下のタブの少し上に出す */
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--missed-color);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.25);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.fab__icon {
+  font-size: 1.1rem;
+}
+
+.fab__count {
+  margin-top: 2px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* PCでは、アプリの横幅（720px）の右端にそろえる */
+@media (min-width: 753px) {
+  .fab {
+    right: calc((100vw - 720px) / 2);
+  }
 }
 
 .task-item__check {
