@@ -29,8 +29,6 @@ function App() {
     toggleDone,
     setResult,
     importLetusEvents,
-    addSampleTasks,
-    removeSampleTasks,
   } = useTasks()
   const now = useNow()
 
@@ -80,14 +78,12 @@ function App() {
     window.scrollTo(0, 0)
   }
 
-  // 取り込む。サンプルのときは「前回の取り込み」を記録しない（お知らせが消えないように）
-  function handleImport(events, { isSample, markPastAsDone }) {
+  // 取り込んで、「前回の取り込み」の日時を記録する
+  function handleImport(events, { markPastAsDone }) {
     importLetusEvents(events, { markPastAsDone })
-    if (!isSample) {
-      const at = new Date().toISOString()
-      saveLastImport(at)
-      setLastImport(at)
-    }
+    const at = new Date().toISOString()
+    saveLastImport(at)
+    setLastImport(at)
   }
 
   function dismissReminder() {
@@ -170,8 +166,6 @@ function App() {
             onEdit={openEditForm}
             onResult={setResult}
             onAdd={openAddForm}
-            onAddSamples={addSampleTasks}
-            onRemoveSamples={removeSampleTasks}
             onShowTimeline={() => changeView('timeline')}
             reminder={reminder}
           />

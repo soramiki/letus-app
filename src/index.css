@@ -243,21 +243,6 @@ select {
   gap: 8px;
 }
 
-/* サンプル表示中のお知らせ */
-.sample-banner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 12px;
-  padding: 8px 12px;
-  border: 1px dashed var(--border);
-  border-radius: var(--radius);
-  font-size: 0.85rem;
-  color: var(--text-sub);
-}
-
 .task-list {
   display: flex;
   flex-direction: column;
@@ -1110,17 +1095,6 @@ select {
 
 .import-help__item small {
   color: var(--text-sub);
-}
-
-.import-help__sample {
-  font-size: 0.85rem;
-  color: var(--text-sub);
-}
-
-.import-help__sample .link-button {
-  display: inline;
-  padding: 0;
-  text-decoration: underline;
 }
 
 /* ホームの上の「取り込みましょう」のお知らせ */

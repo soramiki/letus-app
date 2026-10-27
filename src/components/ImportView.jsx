@@ -9,12 +9,11 @@ import {
   removeCalendarUrl,
   saveCalendarUrl,
 } from '../utils/letusCalendar.js'
-import { createSampleIcs } from '../utils/sampleIcs.js'
 
 const LETUS_EXPORT_URL = 'https://letus.ed.tus.ac.jp/calendar/export.php'
 
 // 「取り込み」の画面：LETUS の課題を、手で入力せずに入れる
-// 1. カレンダーURLから受け取る（またはサンプルを使う） → 2. 何が変わるかを確認 → 3. 取り込む
+// 1. カレンダーURLから受け取る → 2. 何が変わるかを確認 → 3. 取り込む
 export function ImportView({ tasks, lastImport, now, onImport }) {
   const [preview, setPreview] = useState(null) // 確認中の内容
   const [error, setError] = useState('')
@@ -26,7 +25,7 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
   const [isLoading, setIsLoading] = useState(false)
 
   // .ics の中身を読んで、取り込んだら何が変わるかを計算する（まだ反映はしない）
-  function prepare(text, fileName, isSample) {
+  function prepare(text, fileName) {
     setMessage('')
     const { events, skipped } = parseIcs(text)
     if (events.length === 0) {
@@ -37,7 +36,7 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
       return
     }
     setError('')
-    setPreview({ fileName, events, skipped, isSample })
+    setPreview({ fileName, events, skipped })
   }
 
   // 確認画面に出す結果。チェックを切り替えたらすぐ数が変わるように、表示のたびに計算する
@@ -56,7 +55,7 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
     setError('')
     setMessage('')
     try {
-      prepare(await fetchLetusIcs(url), 'LETUS（カレンダーURL）', false)
+      prepare(await fetchLetusIcs(url), 'LETUS（カレンダーURL）')
     } catch (e) {
       setPreview(null)
       setError(e.message)
@@ -78,14 +77,10 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
     setCalendarUrl(null)
   }
 
-  function trySample() {
-    prepare(createSampleIcs(), 'サンプル（架空の授業）', true)
-  }
-
   function confirmImport() {
-    const { events, isSample } = preview
+    const { events } = preview
     const result = previewResult
-    onImport(events, { isSample, markPastAsDone })
+    onImport(events, { markPastAsDone })
     setMessage(
       `取り込みました（追加 ${result.added.length}件・更新 ${result.updated.length}件・変更なし ${result.unchangedCount}件）`,
     )
@@ -164,13 +159,6 @@ export function ImportView({ tasks, lastImport, now, onImport }) {
           </ul>
         </details>
 
-        <p className="import-help__sample">
-          LETUSを使っていない方は、
-          <button type="button" className="link-button" onClick={trySample}>
-            サンプル（架空の授業）で試す
-          </button>
-          こともできます。
-        </p>
       </div>
     </section>
   )

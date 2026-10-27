@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createId } from '../utils/id.js'
 import { importEvents } from '../utils/importEvents.js'
-import { createSampleTasks, isSampleTask } from '../utils/sampleTasks.js'
 import { saveTaskSnapshot } from '../utils/taskSnapshot.js'
 
 // LocalStorage（ブラウザの中の保存場所）に保存するときの名前
@@ -68,15 +67,6 @@ export function useTasks() {
     setTasks((prev) => importEvents(prev, events, createId, options).tasks)
   }
 
-  // サンプルの課題をまとめて入れる／まとめて消す（自分で登録した課題はそのまま）
-  function addSampleTasks() {
-    setTasks((prev) => [...prev.filter((task) => !isSampleTask(task)), ...createSampleTasks()])
-  }
-
-  function removeSampleTasks() {
-    setTasks((prev) => prev.filter((task) => !isSampleTask(task)))
-  }
-
   return {
     tasks,
     addTask,
@@ -85,7 +75,5 @@ export function useTasks() {
     toggleDone,
     setResult,
     importLetusEvents,
-    addSampleTasks,
-    removeSampleTasks,
   }
 }

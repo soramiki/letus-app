@@ -2,7 +2,6 @@ import { formatDate } from '../utils/date.js'
 import { getMissedCountBySubject } from '../utils/missedStats.js'
 import { ImportReminder } from './ImportReminder.jsx'
 import { MissedStatsButton } from './MissedStats.jsx'
-import { isSampleTask } from '../utils/sampleTasks.js'
 import { SUMMARY_GROUPS, summarizeTasks } from '../utils/summary.js'
 import { TaskList } from './TaskList.jsx'
 
@@ -15,8 +14,6 @@ export function HomeView({
   onEdit,
   onResult,
   onAdd,
-  onAddSamples,
-  onRemoveSamples,
   onShowTimeline,
   reminder, // 取り込みのお知らせ（出さないときは null）
 }) {
@@ -34,9 +31,6 @@ export function HomeView({
           <button type="button" className="button button--primary" onClick={onAdd}>
             ＋ 課題を追加
           </button>
-          <button type="button" className="button" onClick={onAddSamples}>
-            サンプルの課題で試す
-          </button>
         </div>
       </div>
       </>
@@ -44,7 +38,6 @@ export function HomeView({
   }
 
   const groups = summarizeTasks(tasks, now)
-  const hasSamples = tasks.some(isSampleTask)
   const hasTodo = SUMMARY_GROUPS.some(({ key }) => groups[key].length > 0)
   const missedCounts = getMissedCountBySubject(tasks)
 
@@ -56,15 +49,6 @@ export function HomeView({
   return (
     <>
       {reminder && <ImportReminder {...reminder} />}
-
-      {hasSamples && (
-        <div className="sample-banner">
-          <span>架空のサンプルの課題を表示しています。</span>
-          <button type="button" className="button" onClick={onRemoveSamples}>
-            サンプルを消す
-          </button>
-        </div>
-      )}
 
       <section className="home-section" aria-labelledby="today-heading">
         <h2 id="today-heading" className="home-section__heading">
