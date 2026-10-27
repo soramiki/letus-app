@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { HomeView } from './components/HomeView.jsx'
 import { ImportView } from './components/ImportView.jsx'
 import { ListView } from './components/ListView.jsx'
-import { NotificationSettings } from './components/NotificationSettings.jsx'
+import { SettingsDialog } from './components/SettingsDialog.jsx'
 import { TabBar } from './components/TabBar.jsx'
 import { TaskForm } from './components/TaskForm.jsx'
 import { TimelineView } from './components/TimelineView.jsx'
@@ -43,9 +43,9 @@ function App() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
 
-  // 通知の設定の小窓が開いているか
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  const closeNotification = useCallback(() => setIsNotificationOpen(false), [])
+  // 設定の小窓が開いているか
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const closeSettings = useCallback(() => setIsSettingsOpen(false), [])
 
   // 再読み込み中か（ボタンを回して、2回押されないようにする）
   const [isReloading, setIsReloading] = useState(false)
@@ -67,7 +67,7 @@ function App() {
     a.localeCompare(b, 'ja'),
   )
   // 科目の色は一度決まったら変えない（新しい科目にだけ色を割り当てる）
-  const subjectColors = useSubjectColors(subjects)
+  const { colors: subjectColors, colorIndexes, changeColor } = useSubjectColors(subjects)
 
   // 条件を1つだけ変える（ほかの条件はそのまま）
   function changeCondition(name, value) {
@@ -154,11 +154,11 @@ function App() {
           <button
             type="button"
             className="button icon-button"
-            onClick={() => setIsNotificationOpen(true)}
-            aria-label="毎朝の通知の設定"
-            title="毎朝の通知の設定"
+            onClick={() => setIsSettingsOpen(true)}
+            aria-label="設定"
+            title="設定（科目の色・通知・カレンダーURL・使い方）"
           >
-            🔔
+            ⚙
           </button>
           <button type="button" className="button button--primary" onClick={openAddForm}>
             ＋ 追加
@@ -214,7 +214,14 @@ function App() {
 
       <TabBar view={view} onChange={changeView} />
 
-      {isNotificationOpen && <NotificationSettings onClose={closeNotification} />}
+      {isSettingsOpen && (
+        <SettingsDialog
+          subjects={subjects}
+          colorIndexes={colorIndexes}
+          onChangeColor={changeColor}
+          onClose={closeSettings}
+        />
+      )}
 
       {isFormOpen && (
         <TaskForm

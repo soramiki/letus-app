@@ -1126,6 +1126,123 @@ select {
   gap: 8px;
 }
 
+/* ===== 設定 ===== */
+/* 設定は中身が多いので、小窓を縦に長く使う */
+.modal--tall {
+  max-width: 560px;
+}
+
+@media (max-width: 600px) {
+  .modal--tall {
+    max-height: 92%;
+  }
+}
+
+.settings-header {
+  position: sticky;
+  top: -20px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -20px -20px 8px;
+  padding: 14px 20px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.settings-header h2 {
+  margin: 0;
+}
+
+.settings-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+}
+
+.settings-section__heading {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.settings-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.settings-section .page-note {
+  margin: 6px 0 8px;
+}
+
+/* 科目の色 */
+.color-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.color-list__subject {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  text-align: left;
+  cursor: pointer;
+}
+
+.color-swatch {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.color-list__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.color-list__current {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.color-palette {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding: 10px 4px 4px;
+}
+
+.color-palette__button {
+  aspect-ratio: 1;
+  min-height: 36px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.color-palette__button[aria-pressed='true'] {
+  border-color: var(--text);
+}
+
 /* ===== 通知の設定・再読み込み ===== */
 .icon-button {
   padding: 8px 10px;
