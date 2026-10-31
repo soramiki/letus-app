@@ -1,5 +1,6 @@
 import { formatDate } from '../utils/date.js'
 import { getMissedCountBySubject } from '../utils/missedStats.js'
+import { AutoImportNotice } from './AutoImportNotice.jsx'
 import { ImportReminder } from './ImportReminder.jsx'
 import { MissedStatsButton } from './MissedStats.jsx'
 import { SUMMARY_GROUPS, summarizeTasks } from '../utils/summary.js'
@@ -16,10 +17,17 @@ export function HomeView({
   onAdd,
   onShowTimeline,
   reminder, // 取り込みのお知らせ（出さないときは null）
+  autoImportResult, // 自動で取り込んだ内容（なければ null）
+  onDismissAutoImport,
 }) {
+  const autoNotice = autoImportResult && (
+    <AutoImportNotice result={autoImportResult} onDismiss={onDismissAutoImport} />
+  )
+
   if (tasks.length === 0) {
     return (
       <>
+        {autoNotice}
         {reminder && <ImportReminder {...reminder} />}
         <div className="empty">
         <p>
@@ -48,6 +56,7 @@ export function HomeView({
 
   return (
     <>
+      {autoNotice}
       {reminder && <ImportReminder {...reminder} />}
 
       <section className="home-section" aria-labelledby="today-heading">

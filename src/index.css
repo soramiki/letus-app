@@ -1097,6 +1097,83 @@ select {
   color: var(--text-sub);
 }
 
+/* ホームの上の「自動で取り込みました」のお知らせ */
+.auto-import {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--primary);
+  border-left-width: 5px;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.auto-import__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.auto-import__header .button {
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+}
+
+.auto-import__title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.auto-import__title small {
+  display: block;
+  font-weight: normal;
+  color: var(--text-sub);
+}
+
+.auto-import__list {
+  margin: 8px 0 0;
+  padding-left: 1.2em;
+  font-size: 0.88rem;
+}
+
+.auto-import__list li {
+  margin-bottom: 4px;
+}
+
+.auto-import__subject {
+  color: var(--text-sub);
+}
+
+.auto-import__due {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-sub);
+}
+
+.auto-import__note {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+/* 設定のオン・オフ */
+.settings-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.settings-toggle input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
 /* ホームの上の「取り込みましょう」のお知らせ */
 .import-reminder {
   display: flex;

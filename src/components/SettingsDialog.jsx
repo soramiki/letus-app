@@ -5,6 +5,7 @@ import {
   removeCalendarUrl,
   saveCalendarUrl,
 } from '../utils/letusCalendar.js'
+import { isAutoImportEnabled, setAutoImportEnabled } from '../utils/autoImport.js'
 import { COLOR_NAMES, COLORS } from '../utils/subjectColors.js'
 import { HowToUse } from './HowToUse.jsx'
 import { NotificationSettings } from './NotificationSettings.jsx'
@@ -117,6 +118,12 @@ function CalendarUrlSettings() {
   const [isEditing, setIsEditing] = useState(false)
   const [input, setInput] = useState('')
   const [error, setError] = useState('')
+  const [autoImport, setAutoImport] = useState(isAutoImportEnabled)
+
+  function handleChangeAuto(e) {
+    setAutoImportEnabled(e.target.checked)
+    setAutoImport(e.target.checked)
+  }
 
   function handleSave(e) {
     e.preventDefault()
@@ -179,6 +186,10 @@ function CalendarUrlSettings() {
         </div>
       )}
       {error && <p className="form__error">{error}</p>}
+      <label className="settings-toggle">
+        <input type="checkbox" checked={autoImport} onChange={handleChangeAuto} />
+        アプリを開いたときに自動で取り込む（1日1回）
+      </label>
       <p className="page-note">URLの取り方は、「取り込み」タブか、下の「使い方」にあります。URLはパスワードと同じなので、人に送らないでください。</p>
     </section>
   )

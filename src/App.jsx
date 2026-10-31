@@ -6,6 +6,7 @@ import { SettingsDialog } from './components/SettingsDialog.jsx'
 import { TabBar } from './components/TabBar.jsx'
 import { TaskForm } from './components/TaskForm.jsx'
 import { TimelineView } from './components/TimelineView.jsx'
+import { useAutoImport } from './hooks/useAutoImport.js'
 import { useNow } from './hooks/useNow.js'
 import { useSubjectColors } from './hooks/useSubjectColors.js'
 import { useTasks } from './hooks/useTasks.js'
@@ -86,10 +87,18 @@ function App() {
   // 取り込んで、「前回の取り込み」の日時を記録する
   function handleImport(events, { markPastAsDone }) {
     importLetusEvents(events, { markPastAsDone })
+    recordImport()
+  }
+
+  // 取り込んだ日時を記録する（週初めのお知らせを出すかどうかに使う）
+  function recordImport() {
     const at = new Date().toISOString()
     saveLastImport(at)
     setLastImport(at)
   }
+
+  // 開いたときに、1日1回 LETUS から自動で取り込む（届いたらホームにお知らせ）
+  const autoImport = useAutoImport({ tasks, importLetusEvents, onImported: recordImport })
 
   function dismissReminder() {
     const week = startOfWeek(now).toISOString()
@@ -178,6 +187,8 @@ function App() {
             onAdd={openAddForm}
             onShowTimeline={() => changeView('timeline')}
             reminder={reminder}
+            autoImportResult={autoImport.result}
+            onDismissAutoImport={autoImport.dismiss}
           />
         )}
         {view === 'list' && (
