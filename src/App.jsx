@@ -31,6 +31,7 @@ function App() {
     updateTask,
     deleteTask,
     deleteSeriesFrom,
+    replaceTasks,
     toggleDone,
     setResult,
     importLetusEvents,
@@ -227,6 +228,8 @@ function App() {
 
       {isSettingsOpen && (
         <SettingsDialog
+          tasks={tasks}
+          onRestore={replaceTasks}
           subjects={subjects}
           colorIndexes={colorIndexes}
           onChangeColor={changeColor}

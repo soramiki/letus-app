@@ -83,6 +83,11 @@ export function useTasks() {
     )
   }
 
+  // バックアップから戻す：今の課題をまるごと置き換える
+  function replaceTasks(newTasks) {
+    setTasks(newTasks)
+  }
+
   // .ics から読み込んだ予定を反映する（ルールは importEvents.js）
   // options: { markPastAsDone } 締切を過ぎた新しい課題を完了にするか
   function importLetusEvents(events, options) {
@@ -96,6 +101,7 @@ export function useTasks() {
     updateTask,
     deleteTask,
     deleteSeriesFrom,
+    replaceTasks,
     toggleDone,
     setResult,
     importLetusEvents,

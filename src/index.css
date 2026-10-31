@@ -1256,6 +1256,26 @@ select {
   margin: 6px 0 8px;
 }
 
+/* ファイルを選ぶ欄は隠して、label をボタンとして見せる */
+.file-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* キーボードで選んだときに、どこにいるか分かるようにする */
+.file-button:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 /* 科目の色 */
 .color-list {
   display: flex;

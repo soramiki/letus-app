@@ -7,12 +7,13 @@ import {
 } from '../utils/letusCalendar.js'
 import { isAutoImportEnabled, setAutoImportEnabled } from '../utils/autoImport.js'
 import { COLOR_NAMES, COLORS } from '../utils/subjectColors.js'
+import { BackupSettings } from './BackupSettings.jsx'
 import { HowToUse } from './HowToUse.jsx'
 import { NotificationSettings } from './NotificationSettings.jsx'
 
 // 設定（右上の ⚙ から開く小窓）
-// 科目の色 / 毎朝の通知 / カレンダーURL / 使い方
-export function SettingsDialog({ subjects, colorIndexes, onChangeColor, onClose }) {
+// 科目の色 / 毎朝の通知 / カレンダーURL / バックアップ / 使い方
+export function SettingsDialog({ tasks, onRestore, subjects, colorIndexes, onChangeColor, onClose }) {
   // Escキーで閉じる
   useEffect(() => {
     function handleKeyDown(e) {
@@ -45,6 +46,7 @@ export function SettingsDialog({ subjects, colorIndexes, onChangeColor, onClose 
         />
         <NotificationSettings />
         <CalendarUrlSettings />
+        <BackupSettings tasks={tasks} onRestore={onRestore} />
         <HowToUse />
       </div>
     </div>
