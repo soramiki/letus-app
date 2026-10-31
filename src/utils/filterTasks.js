@@ -25,7 +25,7 @@ export function filterTasks(tasks, { keyword, status, subject }) {
     if (status === 'missed' && !task.missed) return false
     if (subject && task.subject !== subject) return false
     if (word) {
-      const text = `${task.subject} ${task.title}`.toLowerCase()
+      const text = `${task.subject} ${task.title} ${task.memo ?? ''}`.toLowerCase()
       if (!text.includes(word)) return false
     }
     return true

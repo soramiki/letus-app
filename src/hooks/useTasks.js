@@ -37,6 +37,7 @@ export function useTasks() {
       id: createId(),
       done: false,
       missed: false,
+      memo: '',
       letusUids: [],
       seriesId: null,
       ...fields,

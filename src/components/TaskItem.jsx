@@ -46,6 +46,13 @@ export function TaskItem({ task, now, subjectColor, missedCount = 0, onToggleDon
               {startAt.isNow ? '今すぐ始める' : `始める ${formatDateTime(startAt.at)}`}
             </span>
           )}
+          {task.memo && (
+            <span className="task-item__memo">
+              <span aria-hidden="true">📝 </span>
+              {/* メモの最初の1行（空の行は飛ばす） */}
+              {task.memo.split('\n').find((line) => line.trim()) ?? ''}
+            </span>
+          )}
           {missedCount > 0 && (
             <span className={`task-item__warning task-item__warning--${getMissedLevel(missedCount)}`}>
               ⚠ この科目は、これまでに{missedCount}回提出できていません

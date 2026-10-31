@@ -11,8 +11,8 @@ export function TaskToolbar({ conditions, subjects, onChange }) {
         className="toolbar__search"
         value={conditions.keyword}
         onChange={(e) => onChange('keyword', e.target.value)}
-        placeholder="科目名・課題名で検索"
-        aria-label="科目名・課題名で検索"
+        placeholder="科目名・課題名・メモで検索"
+        aria-label="科目名・課題名・メモで検索"
       />
 
       <div className="toolbar__row">

@@ -521,6 +521,16 @@ select {
   background: var(--today-text);
 }
 
+.task-item__memo {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 0.78rem;
+  color: var(--text-sub);
+}
+
 .task-item__start {
   font-size: 0.8rem;
   color: var(--start-text);
@@ -1528,6 +1538,19 @@ select {
 .field__label small {
   font-weight: normal;
   color: var(--text-sub);
+}
+
+.field textarea {
+  width: 100%;
+  min-height: 72px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  font: inherit;
+  /* スマホで入力時に画面が勝手に拡大されないよう、16px以上にする */
+  font-size: 16px;
+  resize: vertical;
 }
 
 .field input {

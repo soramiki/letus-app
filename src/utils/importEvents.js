@@ -5,6 +5,7 @@
 //   2. 未登録で、同じ「科目名＋課題名」の課題がある → 空いている日付を埋め、UID を追加
 //   3. どちらでもない → 新しい課題として追加（開始だけの予定は、締切未定の課題になる）
 // ・完了チェックは書き換えない
+// ・メモが空なら、LETUS の説明文を入れる（自分で書いたメモは上書きしない。「更新」には数えない）
 // ・ただし markPastAsDone が true なら、新しく追加する課題のうち締切を過ぎたものは完了にする
 //   （LETUS の書き出しには、もう提出したはずの過去の課題も入っているため）
 //
@@ -24,6 +25,7 @@ export function importEvents(tasks, events, createId, { markPastAsDone = false, 
     let task = next.find((t) => t.letusUids.includes(event.uid))
     if (task) {
       touchedIds.add(task.id)
+      if (!task.memo && event.description) task.memo = event.description
       if (task.subject !== event.subject || task[field] !== event.at) {
         task.subject = event.subject
         task[field] = event.at
@@ -37,6 +39,7 @@ export function importEvents(tasks, events, createId, { markPastAsDone = false, 
     if (task) {
       touchedIds.add(task.id)
       if (!task[field]) task[field] = event.at
+      if (!task.memo && event.description) task.memo = event.description
       task.letusUids.push(event.uid)
       updatedIds.add(task.id)
       continue
@@ -51,6 +54,7 @@ export function importEvents(tasks, events, createId, { markPastAsDone = false, 
       dueAt: null,
       done: false,
       missed: false,
+      memo: event.description ?? '',
       letusUids: [event.uid],
     }
     newTask[field] = event.at

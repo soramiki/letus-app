@@ -56,7 +56,7 @@ function parseSubject(category) {
 }
 
 // .ics の文字列 → 課題に関係する予定の一覧
-// 戻り値：{ events: [{ uid, kind: 'start'|'due', subject, title, at }], skipped: 課題ではない予定の数 }
+// 戻り値：{ events: [{ uid, kind: 'start'|'due', subject, title, at, description }], skipped: 課題ではない予定の数 }
 export function parseIcs(text) {
   const events = []
   let skipped = 0
@@ -103,6 +103,8 @@ function toEvent(props) {
     kind: pattern.kind,
     subject: props.CATEGORIES ? parseSubject(unescapeText(props.CATEGORIES)) : '科目なし',
     title: summary.match(pattern.regex)[1].trim(),
+    // LETUS に書いてある課題の説明文（メモに入れる）
+    description: props.DESCRIPTION ? unescapeText(props.DESCRIPTION).trim() : '',
     at,
   }
 }

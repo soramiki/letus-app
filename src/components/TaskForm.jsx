@@ -13,6 +13,7 @@ export function TaskForm({ task, subjects, onSave, onDelete, onClose }) {
   const [title, setTitle] = useState(task?.title ?? '')
   const [dueAt, setDueAt] = useState(task?.dueAt ?? '')
   const [startAt, setStartAt] = useState(task?.startAt ?? '')
+  const [memo, setMemo] = useState(task?.memo ?? '')
   // 開始日時の欄は、すでに値があるときだけ最初から開いておく（クイック追加をシンプルに保つ）
   const [showStart, setShowStart] = useState(Boolean(task?.startAt))
   // 毎週くり返す（追加のときだけ）：何週分か・「第〇回」を付けるか・最初の番号
@@ -55,6 +56,7 @@ export function TaskForm({ task, subjects, onSave, onDelete, onClose }) {
         // 空欄は null として保存する（null ＝ 未定）
         dueAt: dueAt || null,
         startAt: startAt || null,
+        memo: memo.trim(),
       },
       isRepeat
         ? { count: weekCount, startNumber: useNumber ? Math.max(1, Number(startNumber) || 1) : null }
@@ -139,6 +141,18 @@ export function TaskForm({ task, subjects, onSave, onDelete, onClose }) {
               ＋ 開始日時も入れる
             </button>
           )}
+
+          <label className="field">
+            <span className="field__label">
+              メモ <small>（任意）</small>
+            </span>
+            <textarea
+              value={memo}
+              onChange={(e) => setMemo(e.target.value)}
+              placeholder="例：教科書p.30〜35、A4で2枚"
+              rows={3}
+            />
+          </label>
 
           {/* 毎週くり返す（追加のときだけ） */}
           {!isEdit && (
